@@ -6,9 +6,11 @@
 >
 > 最近更新：2026-07-18
 >
-> 文件版本：1.0.0
+> 文件版本：1.1.0
 >
 > GitHub：<https://github.com/prayer168/guardai>
+>
+> 正式網站：<https://guardai-olive.vercel.app>
 
 ---
 
@@ -391,7 +393,7 @@ git push -u origin main
 
 | 項目 | 現況 | 後續方向 |
 | --- | --- | --- |
-| 公開網站 | 程式已公開在 GitHub，尚未建立正式線上操作網址 | 部署至 Vercel 並完成實機驗收 |
+| 公開網站 | 已部署至 Vercel Production，網址為 <https://guardai-olive.vercel.app> | 持續檢查公開網址與比賽現場網路環境 |
 | 即時 AI | 程式已完成；因建置時未提供 API Key，尚未做真實模型費用與延遲測試 | 設定伺服器環境變數後測試輸出穩定性 |
 | 教師資料 | 使用 Demo 模擬資料 | 未來可設計匿名班級工作階段或後端資料庫 |
 | 學習紀錄 | 只存在單一瀏覽器 localStorage | 未來可加入匿名匯出／匯入與跨裝置機制 |
@@ -415,7 +417,25 @@ git push -u origin main
 
 GitHub Repository 目前提供完整原始碼與版本紀錄，但 GitHub Pages 是純靜態託管，無法直接執行本專案的 Next.js 伺服器端 `/api/analyze`。因此正式線上展示建議使用 Vercel。
 
-### 7.2 本機使用方式
+### 7.2 Vercel Production 部署
+
+| 項目 | 狀態 |
+| --- | --- |
+| 正式網站 | <https://guardai-olive.vercel.app> |
+| Vercel 專案 | `prayer168s-projects/guardai` |
+| 部署狀態 | Ready |
+| 部署 ID | `dpl_9Qp1ePHGNndFuDZFDZ5sDoDS8NQ1` |
+| 部署時間 | 2026-07-18 |
+| 執行模式 | Mock Demo；未設定 OpenAI API Key |
+| 建置結果 | Next.js、TypeScript 與 12 個靜態／動態輸出項目建置成功 |
+| 公開頁面測試 | 七個主要頁面與 `/api/knowledge` 全部回傳 HTTP 200 |
+| 分析 API 測試 | 成功遮罩 OTP，回傳 4 個線索、3 個查證問題與 4 個安全行動 |
+| 手機測試 | 390px 等級畫面無水平溢位，首頁與判讀流程可完整操作 |
+| Runtime log | 部署後未發現 error log |
+
+第一次部署使用 Vercel CLI 直接建立 Production 專案。GitHub Repository 自動部署連結尚未授權成功，因此目前 GitHub 後續推送不會自動觸發 Vercel；網站本身已正常上線。程式更新後需再次執行 `npx vercel --prod`，或日後在 Vercel Dashboard 完成 GitHub Integration 授權。
+
+### 7.3 本機使用方式
 
 ```bash
 npm install
@@ -427,14 +447,14 @@ npm run dev
 
 沒有 API Key 時仍可使用 Mock Demo，適合競賽現場與課堂展示。若要啟用正式 AI，需在伺服器環境設定 OpenAI API Key，絕對不能把金鑰寫在前端程式或提交到 GitHub。
 
-### 7.3 正式部署建議
+### 7.4 後續部署與更新方式
 
-1. 在 Vercel 匯入 `prayer168/guardai`。
-2. Framework Preset 使用 Next.js。
-3. 競賽穩定展示可先使用 Mock Demo。
-4. 若啟用即時 AI，設定 `OPENAI_API_KEY` 與可用模型名稱。
-5. 部署後實測全部頁面、手機版、API 回退與 165 連結。
-6. 將正式網址補入本文件與 README。
+1. 修改程式後執行 `npm run lint` 與 `npm run build`。
+2. 提交並推送至 `prayer168/guardai`。
+3. 在 GitHub Integration 完成前，從專案目錄執行 `npx vercel --prod`。
+4. 競賽穩定展示可繼續使用 Mock Demo。
+5. 若啟用即時 AI，設定 `OPENAI_API_KEY` 與可用模型名稱。
+6. 部署後實測全部頁面、手機版、API 回退與 165 連結。
 
 ## 八、可用於成果發表的重點
 
@@ -468,6 +488,8 @@ npm run dev
 | --- | --- | --- | --- |
 | 2026-07-18 | 網站 0.1.0 | 完成七大頁面、AI／Mock、安全遮罩、六題闖關、學習護照、教師 Demo、知識庫與隱私說明 | `c68a624`，GitHub Public Repo |
 | 2026-07-18 | 文件 1.0.0 | 建立本建置歷程、Prompt、AI 編碼調用、修正與部署紀錄 | 本次文件建立提交（Commit 請見 Git 歷史） |
+| 2026-07-18 | Production 0.1.0 | 首次部署 Vercel，完成公開路由、API 與 390px 手機流程驗收 | `dpl_9Qp1ePHGNndFuDZFDZ5sDoDS8NQ1`，<https://guardai-olive.vercel.app> |
+| 2026-07-18 | 文件 1.1.0 | 補記 Vercel 正式部署、公開測試結果與後續更新方式 | 本次部署紀錄提交（Commit 請見 Git 歷史） |
 
 ## 十、未來每次更新的紀錄模板
 

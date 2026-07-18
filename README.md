@@ -4,6 +4,8 @@
 
 GuardAI 是為 2026 TAIA AI 創意設計大賽教育科技領域製作的響應式學習平台。它不替使用者宣告訊息真假，而是以「停、看、問、查、求」流程，帶領學生、家長與長者辨認風險線索、提出查證問題、選擇安全行動並向真人求助。
 
+正式展示網站：<https://guardai-olive.vercel.app>
+
 完整的需求提示詞、AI 編碼調用、修正、測試與部署紀錄，請參閱 [`docs/BUILD_JOURNAL.md`](docs/BUILD_JOURNAL.md)。這份文件會隨專案持續更新，並作為口頭報告與成果發表的素材來源。
 
 ## 完成功能
@@ -54,6 +56,8 @@ npm run build
 ```
 
 ## 部署到 Vercel
+
+目前 Production 網站為 <https://guardai-olive.vercel.app>。
 
 1. 將 `guardai` 專案推送至 GitHub。
 2. 在 Vercel 匯入儲存庫，Framework Preset 選 Next.js。
