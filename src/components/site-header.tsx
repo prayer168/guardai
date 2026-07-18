@@ -8,10 +8,10 @@ import { useState } from "react";
 const navigation = [
   { href: "/", label: "首頁" },
   { href: "/analyze", label: "AI 判讀實驗室" },
-  { href: "/challenge", label: "防詐闖關" },
   { href: "/passport", label: "學習護照" },
   { href: "/teacher", label: "教師專區" },
   { href: "/knowledge", label: "知識庫" },
+  { href: "/challenge", label: "防詐闖關" },
   { href: "/privacy", label: "隱私與 AI" },
 ] as const;
 
