@@ -456,7 +456,7 @@ GitHub Repository 目前提供完整原始碼與版本紀錄，但 GitHub Pages 
 | 正式網站 | <https://guardai-olive.vercel.app> |
 | Vercel 專案 | `prayer168s-projects/guardai` |
 | 部署狀態 | Ready |
-| 最新部署 ID | `dpl_2bYGxH1GfCq6VqrqEGdhms8f56Hu` |
+| 最新部署 ID | `dpl_GsrzCNAQVgu22PeJxDahLDMDrv3F` |
 | 部署時間 | 2026-07-18 |
 | 執行模式 | Mock Demo；未設定 OpenAI API Key |
 | 建置結果 | Next.js、TypeScript 與 12 個靜態／動態輸出項目建置成功 |
@@ -524,7 +524,7 @@ npm run dev
 | 2026-07-18 | 文件 1.1.0 | 補記 Vercel 正式部署、公開測試結果與後續更新方式 | 本次部署紀錄提交（Commit 請見 Git 歷史） |
 | 2026-07-18 | 網站 0.2.0 | 深度研究擴充至 14 種詐騙，加入流程、結果、因應、查證問題、官方來源與 14 張 Images 2.0 海報 | `60f37a2`；`dpl_2bYGxH1GfCq6VqrqEGdhms8f56Hu` |
 | 2026-07-18 | 文件 1.2.0 | 補記研究方法、海報提示詞、QR 圖像安全修正、程式調用與部署驗證 | 本次文件更新提交（Commit 請見 Git 歷史） |
-| 2026-07-18 | 網站 0.2.1／文件 1.2.1 | 將「防詐闖關」導覽頁籤移至「知識庫」與「隱私與 AI」之間，並同步更新建置紀錄 | 本次導覽調整提交與 Production 重新部署 |
+| 2026-07-18 | 網站 0.2.1／文件 1.2.1 | 將「防詐闖關」導覽頁籤移至「知識庫」與「隱私與 AI」之間，並同步更新建置紀錄 | `3071e03`；`dpl_GsrzCNAQVgu22PeJxDahLDMDrv3F` |
 
 ## 十、未來每次更新的紀錄模板
 
