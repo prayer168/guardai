@@ -455,11 +455,11 @@ GitHub Repository 目前提供完整原始碼與版本紀錄，但 GitHub Pages 
 | 正式網站 | <https://guardai-olive.vercel.app> |
 | Vercel 專案 | `prayer168s-projects/guardai` |
 | 部署狀態 | Ready |
-| 部署 ID | `dpl_9Qp1ePHGNndFuDZFDZ5sDoDS8NQ1` |
+| 最新部署 ID | `dpl_2bYGxH1GfCq6VqrqEGdhms8f56Hu` |
 | 部署時間 | 2026-07-18 |
 | 執行模式 | Mock Demo；未設定 OpenAI API Key |
 | 建置結果 | Next.js、TypeScript 與 12 個靜態／動態輸出項目建置成功 |
-| 公開頁面測試 | 七個主要頁面與 `/api/knowledge` 全部回傳 HTTP 200 |
+| 公開頁面測試 | 七個主要頁面、`/api/knowledge` 與知識庫海報均回傳 HTTP 200；API 為 14 類且每類四階段完整 |
 | 分析 API 測試 | 成功遮罩 OTP，回傳 4 個線索、3 個查證問題與 4 個安全行動 |
 | 手機測試 | 390px 等級畫面無水平溢位，首頁與判讀流程可完整操作 |
 | Runtime log | 部署後未發現 error log |
@@ -521,7 +521,7 @@ npm run dev
 | 2026-07-18 | 文件 1.0.0 | 建立本建置歷程、Prompt、AI 編碼調用、修正與部署紀錄 | 本次文件建立提交（Commit 請見 Git 歷史） |
 | 2026-07-18 | Production 0.1.0 | 首次部署 Vercel，完成公開路由、API 與 390px 手機流程驗收 | `dpl_9Qp1ePHGNndFuDZFDZ5sDoDS8NQ1`，<https://guardai-olive.vercel.app> |
 | 2026-07-18 | 文件 1.1.0 | 補記 Vercel 正式部署、公開測試結果與後續更新方式 | 本次部署紀錄提交（Commit 請見 Git 歷史） |
-| 2026-07-18 | 網站 0.2.0 | 深度研究擴充至 14 種詐騙，加入流程、結果、因應、查證問題、官方來源與 14 張 Images 2.0 海報 | 本次功能提交與 Production 重新部署 |
+| 2026-07-18 | 網站 0.2.0 | 深度研究擴充至 14 種詐騙，加入流程、結果、因應、查證問題、官方來源與 14 張 Images 2.0 海報 | `60f37a2`；`dpl_2bYGxH1GfCq6VqrqEGdhms8f56Hu` |
 | 2026-07-18 | 文件 1.2.0 | 補記研究方法、海報提示詞、QR 圖像安全修正、程式調用與部署驗證 | 本次文件更新提交（Commit 請見 Git 歷史） |
 
 ## 十、未來每次更新的紀錄模板
