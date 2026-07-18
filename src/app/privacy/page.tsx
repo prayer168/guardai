@@ -13,7 +13,7 @@ export default function PrivacyPage() {
         <section className="grid gap-5 md:grid-cols-2">
           {[
             [EyeOff, "輸入前先少一點", "不要貼入姓名、身分證、帳號、密碼、信用卡或 OTP。系統會再次遮罩常見敏感格式。"],
-            [Database, "不建立帳號", "MVP 不要求登入，也不把使用者貼入的訊息寫入資料庫。學習紀錄只存在本機 localStorage。"],
+            [Database, "不保存原始訊息", "MVP 不要求登入，也不把使用者貼入的訊息寫入資料庫。學習紀錄只存在本機 localStorage。"],
             [LockKeyhole, "金鑰留在伺服器", "啟用即時 AI 時，API Key 只存在伺服器環境變數，不會傳到瀏覽器。"],
             [Bot, "AI 不是最終裁判", "AI 可能誤判、漏判或欠缺最新資訊；結果只用來協助辨認風險與規劃查證。"],
           ].map(([Icon, title, description]) => {
@@ -28,7 +28,7 @@ export default function PrivacyPage() {
           <ol className="mt-7 grid gap-4 md:grid-cols-4">
             {["瀏覽器送出文字", "伺服器先遮罩敏感格式", "AI 或離線規則分析", "只回傳結構化學習結果"].map((item, index) => <li key={item} className="numbered-flow"><span>{index + 1}</span><p>{item}</p></li>)}
           </ol>
-          <p className="mt-6 rounded-xl bg-ivory-deep/60 p-4 text-sm leading-7 text-ink-muted">即時 OpenAI 模式設定 <code>store: false</code>，應用本身不永久保存訊息；仍建議只輸入完成查證所需的最少內容。</p>
+          <p className="mt-6 rounded-xl bg-ivory-deep/60 p-4 text-sm leading-7 text-ink-muted">即時 OpenAI 模式設定 <code>store: false</code>，應用本身不永久保存訊息。為控制公開網站用量，每日配額服務只保存日期、不可逆訪客雜湊與次數，於期限到達後自動刪除；不保存訊息文字、分析結果、姓名或 IP 原值。</p>
         </section>
 
         <section className="rounded-3xl bg-navy p-6 text-ivory md:p-8">

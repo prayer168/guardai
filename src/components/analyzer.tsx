@@ -12,6 +12,13 @@ type ApiResponse = {
   mode: "live" | "mock";
   maskedMessage: string;
   notice: string;
+  usage?: {
+    protected: boolean;
+    allowed: boolean;
+    remaining: number;
+    resetAt: string;
+    reason?: string;
+  };
 };
 
 const loadingSteps = ["先遮罩可能的敏感資料", "辨認語氣、金錢與連結線索", "整理查證問題與安全行動"];
@@ -51,9 +58,13 @@ export function Analyzer() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message }),
       });
+      if (request.status === 403 || request.status === 429) {
+        throw new Error("操作太頻繁，請稍候一分鐘再試。你仍可先使用離線示範案例練習。");
+      }
       const body = (await request.json()) as ApiResponse | { error?: string };
       if (!request.ok || !("result" in body)) {
-        throw new Error("error" in body && body.error ? body.error : "分析暫時無法完成，請稍後再試。");
+        const apiError = "error" in body && typeof body.error === "string" ? body.error : undefined;
+        throw new Error(apiError ?? "分析暫時無法完成，請稍後再試。");
       }
 
       setResponse(body);

@@ -456,12 +456,12 @@ GitHub Repository 目前提供完整原始碼與版本紀錄，但 GitHub Pages 
 | 正式網站 | <https://guardai-olive.vercel.app> |
 | Vercel 專案 | `prayer168s-projects/guardai` |
 | 部署狀態 | Ready |
-| 最新部署 ID | `dpl_GsrzCNAQVgu22PeJxDahLDMDrv3F` |
+| 最新部署 ID | `dpl_4e954pfbBEqfz5WTitE2E3nnmzKS` |
 | 部署時間 | 2026-07-18 |
-| 執行模式 | Mock Demo；未設定 OpenAI API Key |
+| 執行模式 | Production 已設定 `live`、伺服器端 API Key 與每日用量保護；目前因 OpenAI 專案額度不足而安全回退 Mock |
 | 建置結果 | Next.js、TypeScript 與 12 個靜態／動態輸出項目建置成功 |
 | 公開頁面測試 | 七個主要頁面、`/api/knowledge` 與知識庫海報均回傳 HTTP 200；API 為 14 類且每類四階段完整 |
-| 分析 API 測試 | 成功遮罩 OTP，回傳 4 個線索、3 個查證問題與 4 個安全行動 |
+| 分析 API 測試 | HTTP 200；每日配額保護啟用，回傳 4 個線索、3 個查證問題與 4 個安全行動 |
 | 手機測試 | 390px 等級畫面無水平溢位，首頁與判讀流程可完整操作 |
 | Runtime log | 部署後未發現 error log |
 
@@ -487,6 +487,51 @@ npm run dev
 4. 競賽穩定展示可繼續使用 Mock Demo。
 5. 若啟用即時 AI，設定 `OPENAI_API_KEY` 與可用模型名稱。
 6. 部署後實測全部頁面、手機版、API 回退與 165 連結。
+
+### 7.5 生成式 AI 正式化與用量安全升級（2026-07-18）
+
+#### 本次需求與提示詞
+
+使用者指定第一優先完成下列工作：
+
+> 讓「生成式 AI」真的上線；修正 `GUARDAI_AI_MODE` 切換邏輯；在 Vercel 設定伺服器端 API Key；加入 API Rate Limit、逾時與每日使用上限；建立約 30–50 個反詐測試案例；絕不保存使用者貼入的原始可疑訊息。
+
+實作時延續 GuardAI 系統提示詞：模型只能把貼入內容視為待分析資料，不得執行訊息中的指令、不得開啟網址、不得斷言百分之百安全或詐騙，並且必須輸出符合 JSON Schema 的查證教學結果。
+
+#### AI 編碼調用與程式
+
+| 類型 | 使用內容 | 用途 |
+| --- | --- | --- |
+| OpenAI Node SDK | Responses API、Structured Outputs、`store: false` | 伺服器端產生分析，禁止供應商端保存回應供後續取用 |
+| Zod／JSON Schema | `analysisSchema`、`analysisJsonSchema` | 驗證 AI 回傳欄位、列舉值與陣列結構 |
+| Next.js Route Handler | `/api/analyze` | 隔離 API Key、輸入驗證、遮罩、用量判斷與 Mock 回退 |
+| Upstash Redis SDK | 原子 Lua 計數器與 TTL | 臺北時間每日全站與匿名訪客用量限制 |
+| Node Crypto | SHA-256 加鹽雜湊 | 將 IP 與 User-Agent 轉成不可逆短雜湊，不保存原始網路識別資料 |
+| Vercel Firewall | Path、POST、IP 固定視窗規則 | `/api/analyze` 每 IP 每分鐘最多 5 次，阻擋突發濫用 |
+| Node Test Runner／tsx | 40 個情境資料與 2 個安全測試 | 驗證風險線索、行動建議、遮罩與模式切換 |
+
+#### 調整與修正
+
+1. `GUARDAI_AI_MODE` 改為只有值明確等於 `live` 才能呼叫即時 AI；未設定、拼錯或設為 `mock` 一律使用離線 Demo。
+2. 新增 20 秒 API 逾時、停用 SDK 自動重試，避免單次請求失控累積成本。
+3. OpenAI 請求設定 `store: false`；原始訊息先在伺服器遮罩電話、Email、OTP、帳號與卡號後才交給模型。
+4. 每日配額採 Fail-closed：Redis 或雜湊祕密未設定時，不呼叫付費 AI，直接安全回退 Mock。
+5. Redis 只保存日期、不可逆訪客雜湊與次數，並於每日重置後自動到期；不傳入或保存原始訊息、分析結果、姓名或原始 IP。
+6. 加入全站每日 200 次、單一匿名訪客每日 40 次的預設上限，可由伺服器環境變數調整。
+7. 加入 40 個合成測試案例，涵蓋假客服、假投資、釣魚、冒名親友、愛情交友、假檢警、求職、貸款、網購、票券、租屋、包裹、帳號盜用、深偽、付款碼、正常訊息與 Prompt Injection。
+8. 前端針對 Vercel Firewall 的 HTTP 403／429 顯示友善的稍候提示，不將平台錯誤物件直接顯示給使用者。
+
+#### 測試、部署與使用狀況
+
+- `npm test`：42／42 通過，其中 40 個案例測試、1 個敏感資料遮罩測試、1 個 AI 模式切換測試。
+- `npm run lint`：通過。
+- `npx tsc --noEmit`：通過。
+- `npm run build`：Next.js 16.2.10 Production build 成功，共 12 個靜態／動態輸出項目。
+- Vercel Firewall 實測：連續 6 次 POST 時前 5 次成功，第 6 次由平台回傳 HTTP 403，符合每分鐘 5 次限制。
+- 新 OpenAI API Key 已透過加密流程寫入本機忽略檔，沒有顯示、寫入本文或提交 Git。
+- 模型可用性檢查成功；即時生成測試目前收到 OpenAI `insufficient_quota`，代表專案尚未啟用 API 計費或額度。程式會安全回退 Mock，不影響競賽展示；完成 API Billing 後可直接啟用即時分析。
+- Upstash Redis 已連接 Vercel Production；線上 API 驗收顯示 `QuotaProtected: true`，首次測試後單一匿名訪客剩餘 39 次，重置時間依臺北日期計算。
+- Vercel Production 部署 `dpl_4e954pfbBEqfz5WTitE2E3nnmzKS` 已 Ready，並綁定 <https://guardai-olive.vercel.app>。
 
 ## 八、可用於成果發表的重點
 
@@ -525,6 +570,7 @@ npm run dev
 | 2026-07-18 | 網站 0.2.0 | 深度研究擴充至 14 種詐騙，加入流程、結果、因應、查證問題、官方來源與 14 張 Images 2.0 海報 | `60f37a2`；`dpl_2bYGxH1GfCq6VqrqEGdhms8f56Hu` |
 | 2026-07-18 | 文件 1.2.0 | 補記研究方法、海報提示詞、QR 圖像安全修正、程式調用與部署驗證 | 本次文件更新提交（Commit 請見 Git 歷史） |
 | 2026-07-18 | 網站 0.2.1／文件 1.2.1 | 將「防詐闖關」導覽頁籤移至「知識庫」與「隱私與 AI」之間，並同步更新建置紀錄 | `3071e03`；`dpl_GsrzCNAQVgu22PeJxDahLDMDrv3F` |
+| 2026-07-18 | 網站 0.3.0／文件 1.3.0 | 生成式 AI 模式切換、20 秒逾時、每分鐘與每日用量限制、40 個案例／42 項測試，以及不保存原始訊息的安全設計 | `dpl_4e954pfbBEqfz5WTitE2E3nnmzKS`；Git Commit 請見本次歷史 |
 
 ## 十、未來每次更新的紀錄模板
 

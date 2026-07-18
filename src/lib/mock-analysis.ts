@@ -18,7 +18,7 @@ const rules: Rule[] = [
   },
   {
     type: "money",
-    pattern: /匯款|轉帳|ATM|付款|扣款|保證金|手續費|獲利|報酬/g,
+    pattern: /匯款|轉帳|ATM|付款|扣款|退款|補繳|存款|運費|醫療費|貸款|保證金|手續費|獲利|報酬|\d+\s*元/g,
     explanation: "訊息涉及金錢操作，應中止原對話並從獨立管道查證。",
     tactic: "利用損失或獲利期待",
     weight: 3,
@@ -32,7 +32,7 @@ const rules: Rule[] = [
   },
   {
     type: "link",
-    pattern: /https?:\/\/\S+|www\.\S+|點擊.{0,5}連結|陌生網址|短網址/g,
+    pattern: /https?:\/\/\S+|www\.\S+|點擊.{0,5}連結|投票連結|登入連結|驗證連結|陌生網址|短網址/g,
     explanation: "訊息中的連結可能導向仿冒頁面；不要直接開啟。",
     tactic: "引導進入受控入口",
     weight: 2,
@@ -46,7 +46,7 @@ const rules: Rule[] = [
   },
   {
     type: "secrecy",
-    pattern: /保密|不要告訴|不能告訴|請勿外傳|私下處理/g,
+    pattern: /保密|不要告訴|不能告訴|請勿外傳|私下/g,
     explanation: "要求保密會阻止你向可信任的人求助，是常見的控制手法。",
     tactic: "切斷外部求助",
     weight: 3,
@@ -97,7 +97,7 @@ export function createMockAnalysis(
   let riskLevel: AnalysisResult["riskLevel"] = "unknown";
   if ((hasMoney && hasSensitive) || (hasMoney && hasSecrecy) || score >= 9) {
     riskLevel = "critical";
-  } else if (score >= 6) {
+  } else if (score >= 5) {
     riskLevel = "high";
   } else if (score >= 3) {
     riskLevel = "medium";
