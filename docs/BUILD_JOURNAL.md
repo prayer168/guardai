@@ -456,7 +456,7 @@ GitHub Repository 目前提供完整原始碼與版本紀錄，但 GitHub Pages 
 | 正式網站 | <https://guardai-olive.vercel.app> |
 | Vercel 專案 | `prayer168s-projects/guardai` |
 | 部署狀態 | Ready |
-| 最新部署 ID | `dpl_AsCtsSG7ionxHiqcAQtLGpspZdfH` |
+| 最新部署 ID | `dpl_6gFd4ebPSjzeERB5q2yCdVge2pwW` |
 | 部署時間 | 2026-07-18 |
 | 執行模式 | Production 已設定 `live`、伺服器端 API Key 與每日用量保護；目前因 OpenAI 專案額度不足而安全回退 Mock |
 | 建置結果 | Next.js、TypeScript 與 15 個靜態／動態輸出項目建置成功 |
@@ -589,7 +589,8 @@ npm run dev
 6. 真實 Redis 端對端：建立班級成功；加入後 participants=1、completed=0；提交後 participants=1、completed=1、completionRate=100，前測 60、後測 80、最常忽略「更換入口」。
 7. 165 API：HTTP 200、`sourceMode=official-open-data`、6 筆、Cache-Control 每日更新；知識庫頁可見官方區塊。
 8. 390px 瀏覽器驗收：教師頁、加入頁、學習護照與知識庫均有內容、無 Next.js error overlay、無 page error。
-9. 最終部署：`dpl_AsCtsSG7ionxHiqcAQtLGpspZdfH`，<https://guardai-olive.vercel.app>。
+9. 匿名班級與官方資料階段部署：`dpl_AsCtsSG7ionxHiqcAQtLGpspZdfH`，<https://guardai-olive.vercel.app>。
+10. 首頁標籤精簡階段部署：`dpl_6gFd4ebPSjzeERB5q2yCdVge2pwW`；Production HTTP 200，指定標籤已不存在，GuardAI 標題與核心標語仍正常。
 
 ## 八、可用於成果發表的重點
 
@@ -649,6 +650,7 @@ npm run dev
 | 2026-07-18 | 網站 0.2.1／文件 1.2.1 | 將「防詐闖關」導覽頁籤移至「知識庫」與「隱私與 AI」之間，並同步更新建置紀錄 | `3071e03`；`dpl_GsrzCNAQVgu22PeJxDahLDMDrv3F` |
 | 2026-07-18 | 網站 0.3.0／文件 1.3.0 | 生成式 AI 模式切換、20 秒逾時、每分鐘與每日用量限制、40 個案例／42 項測試，以及不保存原始訊息的安全設計 | `dpl_4e954pfbBEqfz5WTitE2E3nnmzKS`；Git Commit 請見本次歷史 |
 | 2026-07-18 | 網站 0.4.0／文件 1.4.0 | 完成 30 天匿名班級後端、學生加入與成果提交、教師 Redis 彙總、165 官方 CSV 每日更新，測試增至 50 項 | `dpl_AsCtsSG7ionxHiqcAQtLGpspZdfH`；Git Commit 請見本次歷史 |
+| 2026-07-18 | Production 0.4.1／文件 1.4.1 | 移除首頁 Hero「AI × 查證力 × 教育科技」標籤；補強即時評測錯誤診斷並記錄 `insufficient_quota` 實測 | `2c017a9`；`dpl_6gFd4ebPSjzeERB5q2yCdVge2pwW` |
 
 ## 十、未來每次更新的紀錄模板
 
