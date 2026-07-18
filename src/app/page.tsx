@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, BookOpenCheck, HandHeart, MessageCircleQuestion, MousePointerClick, SearchCheck, ShieldCheck, Users } from "lucide-react";
+import { ArrowRight, BadgeCheck, BookOpenCheck, HandHeart, MessageCircleQuestion, MousePointerClick, SearchCheck, Users } from "lucide-react";
 
 import { verificationSteps } from "@/lib/content";
 
@@ -15,10 +15,7 @@ export default function HomePage() {
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-navy/80 to-transparent" />
         <div className="site-container relative flex min-h-[680px] items-center py-20 md:min-h-[720px]">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-2 text-sm font-bold text-gold">
-              <ShieldCheck aria-hidden="true" size={18} /> AI × 查證力 × 教育科技
-            </div>
-            <h1 className="mt-7 text-5xl font-black leading-[1.08] tracking-tight sm:text-6xl md:text-7xl">
+            <h1 className="text-5xl font-black leading-[1.08] tracking-tight sm:text-6xl md:text-7xl">
               GuardAI
               <span className="mt-2 block text-gold">反詐守門員</span>
             </h1>

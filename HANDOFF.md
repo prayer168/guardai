@@ -192,9 +192,11 @@ npm run build
 ### P0：OpenAI API 額度
 
 - API Key、Vercel 環境變數、模型與程式都已部署。
-- 模型可用性檢查成功，但實際生成回覆 `insufficient_quota`。
+- 2026-07-18 使用本機安全保存的真正金鑰實測，約 1.8 秒後回覆 HTTP 429 `insufficient_quota`；請求已到達 OpenAI，但尚未進入內容品質評分。
+- Vercel 受保護環境變數以 CLI 下載時會得到 `[SENSITIVE]`，不可拿該值執行本機評測；本次診斷暫存檔已刪除。
 - 必須由帳號／專案擁有者在 OpenAI Platform 啟用 API Billing 或購買 API 額度。
-- 完成後不需重新建立金鑰；先執行小批次 `npm run test:live`，確認成本與輸出，再跑完整 40 案例。
+- 完成後不需重新建立金鑰；先用 `GUARDAI_LIVE_EVAL_LIMIT=5` 執行冒煙測試，通過後再跑完整 40 案例。
+- `tests/run-live-eval.ts` 已能顯示每題延遲、HTTP 狀態與錯誤代碼，並會遮罩疑似 API Key。
 - 未啟用額度前，Production 會安全回退 Mock。
 
 ### P1：實際教學成效

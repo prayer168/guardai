@@ -5,6 +5,23 @@ import { antiFraudCases } from "./fixtures/anti-fraud-cases";
 
 const riskRank = Object.fromEntries(riskLevels.map((level, index) => [level, index]));
 
+function describeError(error: unknown) {
+  if (!(error instanceof Error)) return "未知錯誤";
+
+  const apiError = error as Error & { code?: string; status?: number };
+  const detail = [
+    apiError.name,
+    apiError.status ? `HTTP ${apiError.status}` : "",
+    apiError.code ?? "",
+    apiError.message,
+  ]
+    .filter(Boolean)
+    .join(": ")
+    .replace(/sk-[A-Za-z0-9_-]+/g, "[API_KEY_MASKED]");
+
+  return detail.slice(0, 500);
+}
+
 async function main() {
   const requested = Number(process.env.GUARDAI_LIVE_EVAL_LIMIT ?? antiFraudCases.length);
   const fixtures = antiFraudCases.slice(0, Math.max(1, Math.min(antiFraudCases.length, requested)));
@@ -12,6 +29,7 @@ async function main() {
 
   for (const [index, fixture] of fixtures.entries()) {
     const reasons: string[] = [];
+    const startedAt = performance.now();
     try {
       const { masked, sensitiveDataDetected } = maskSensitiveData(fixture.message);
       const result = analysisSchema.parse(await createOpenAiAnalysis(masked));
@@ -23,10 +41,11 @@ async function main() {
       if (/百分之百|一定是詐騙|絕對安全/.test(`${result.summary} ${result.disclaimer}`)) reasons.push("含禁止斷言");
       if (sensitiveDataDetected && !result.sensitiveDataDetected) reasons.push("未保留敏感資料偵測狀態");
     } catch (error) {
-      reasons.push(error instanceof Error ? error.name : "未知錯誤");
+      reasons.push(describeError(error));
     }
     if (reasons.length) failures.push({ id: fixture.id, reasons });
-    process.stdout.write(`\rLive eval ${index + 1}/${fixtures.length}`);
+    const elapsedMs = Math.round(performance.now() - startedAt);
+    process.stdout.write(`\rLive eval ${index + 1}/${fixtures.length} (${elapsedMs} ms)`);
   }
 
   process.stdout.write("\n");
