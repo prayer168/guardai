@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "防詐知識庫" };
 export default function KnowledgePage() {
   return (
     <>
-      <PageIntro eyebrow="官方來源 × 白話整理" title="防詐知識庫" description="依情境查看風險線索與獨立查證方法。內容標示來源與更新日期，不用聽信沒有出處的轉傳訊息。" />
+      <PageIntro eyebrow="官方來源 × 流程拆解 × Images 2.0 海報" title="防詐知識庫" description="深入認識 14 種詐騙如何接觸、取信、施壓與收割；看懂可能結果，練習可執行的查證與止損行動。" />
       <div className="site-container py-10 md:py-14"><KnowledgeBrowser /></div>
     </>
   );
