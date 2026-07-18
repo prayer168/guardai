@@ -1,9 +1,8 @@
 import "server-only";
 
-import { createHash } from "node:crypto";
-import { Redis } from "@upstash/redis";
-
 import { hasUsageStoreConfig } from "@/lib/ai-config";
+import { requestFingerprint } from "@/lib/private-identifier";
+import { getRedis } from "@/lib/redis";
 
 type UsageLimits = {
   globalDailyLimit: number;
@@ -18,19 +17,6 @@ export type UsageQuota = {
   reason?: "store_unavailable" | "global_daily_limit" | "visitor_daily_limit";
 };
 
-let redis: Redis | null = null;
-
-function getRedis() {
-  if (redis) return redis;
-
-  const url = process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
-  if (!url || !token) return null;
-
-  redis = new Redis({ url, token });
-  return redis;
-}
-
 function taipeiDayWindow(now = new Date()) {
   const offsetMs = 8 * 60 * 60 * 1000;
   const taipei = new Date(now.getTime() + offsetMs);
@@ -42,18 +28,6 @@ function taipeiDayWindow(now = new Date()) {
   ) - offsetMs;
   const ttlSeconds = Math.max(60, Math.ceil((resetMs - now.getTime()) / 1000) + 60);
   return { day, resetAt: new Date(resetMs).toISOString(), ttlSeconds };
-}
-
-function requestFingerprint(request: Request) {
-  const forwardedFor = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-  const ip = forwardedFor || request.headers.get("x-real-ip") || "unknown";
-  const userAgent = request.headers.get("user-agent") || "unknown";
-  const salt = process.env.GUARDAI_LIMIT_SALT || "";
-
-  return createHash("sha256")
-    .update(`${salt}\u0000${ip}\u0000${userAgent}`)
-    .digest("hex")
-    .slice(0, 32);
 }
 
 const incrementScript = `
@@ -68,11 +42,11 @@ export async function consumeDailyQuota(request: Request, limits: UsageLimits): 
   const { day, resetAt, ttlSeconds } = taipeiDayWindow();
   const client = getRedis();
 
-  if (!client || !hasUsageStoreConfig()) {
+  const visitor = requestFingerprint(request);
+  if (!client || !visitor || !hasUsageStoreConfig()) {
     return { protected: false, allowed: false, remaining: 0, resetAt, reason: "store_unavailable" };
   }
 
-  const visitor = requestFingerprint(request);
   const [globalCount, visitorCount] = await client.eval<[number], [number, number]>(
     incrementScript,
     [`guardai:ai:global:${day}`, `guardai:ai:visitor:${day}:${visitor}`],

@@ -426,10 +426,10 @@ git push -u origin main
 | 項目 | 現況 | 後續方向 |
 | --- | --- | --- |
 | 公開網站 | 已部署至 Vercel Production，網址為 <https://guardai-olive.vercel.app> | 持續檢查公開網址與比賽現場網路環境 |
-| 即時 AI | 程式已完成；因建置時未提供 API Key，尚未做真實模型費用與延遲測試 | 設定伺服器環境變數後測試輸出穩定性 |
-| 教師資料 | 使用 Demo 模擬資料 | 未來可設計匿名班級工作階段或後端資料庫 |
-| 學習紀錄 | 只存在單一瀏覽器 localStorage | 未來可加入匿名匯出／匯入與跨裝置機制 |
-| 165 資料 | 已預留 `/api/knowledge` 介面；目前為 14 類官方資料人工研究與結構化整理 | 串接官方開放資料並建立更新時間檢查 |
+| 即時 AI | 金鑰、模式、逾時與配額均已部署；OpenAI 專案目前沒有 API 額度 | 由專案擁有者啟用 API Billing 後執行 40 案例即時模型評估 |
+| 教師資料 | 已完成 30 天匿名班級、加入、成果提交與 Redis 彙總 | 實際進班試用後調整情境包與統計指標 |
+| 學習紀錄 | 個人紀錄保存在單一瀏覽器；加入班級後可提交固定匿名成果欄位 | 未來可評估不含個資的匯出／匯入 |
+| 165 資料 | 已串接政府資料開放平臺 CSV，每日檢查更新；失敗時保留 14 類人工查核內容 | 監測官方欄位與資源網址變更 |
 | 自動測試 | 已完成瀏覽器人工／自動操作驗收 | 增加 Playwright E2E 測試與 CI |
 | 成效證據 | 目前是 Demo 前後測 | 實際進班試用，蒐集匿名前後測與質性回饋 |
 
@@ -456,11 +456,11 @@ GitHub Repository 目前提供完整原始碼與版本紀錄，但 GitHub Pages 
 | 正式網站 | <https://guardai-olive.vercel.app> |
 | Vercel 專案 | `prayer168s-projects/guardai` |
 | 部署狀態 | Ready |
-| 最新部署 ID | `dpl_4e954pfbBEqfz5WTitE2E3nnmzKS` |
+| 最新部署 ID | `dpl_AsCtsSG7ionxHiqcAQtLGpspZdfH` |
 | 部署時間 | 2026-07-18 |
 | 執行模式 | Production 已設定 `live`、伺服器端 API Key 與每日用量保護；目前因 OpenAI 專案額度不足而安全回退 Mock |
-| 建置結果 | Next.js、TypeScript 與 12 個靜態／動態輸出項目建置成功 |
-| 公開頁面測試 | 七個主要頁面、`/api/knowledge` 與知識庫海報均回傳 HTTP 200；API 為 14 類且每類四階段完整 |
+| 建置結果 | Next.js、TypeScript 與 15 個靜態／動態輸出項目建置成功 |
+| 公開頁面測試 | 八個主要頁面、匿名班級 API、`/api/knowledge` 與官方闢謠 API 均回傳預期狀態 |
 | 分析 API 測試 | HTTP 200；每日配額保護啟用，回傳 4 個線索、3 個查證問題與 4 個安全行動 |
 | 手機測試 | 390px 等級畫面無水平溢位，首頁與判讀流程可完整操作 |
 | Runtime log | 部署後未發現 error log |
@@ -533,6 +533,64 @@ npm run dev
 - Upstash Redis 已連接 Vercel Production；線上 API 驗收顯示 `QuotaProtected: true`，首次測試後單一匿名訪客剩餘 39 次，重置時間依臺北日期計算。
 - Vercel Production 部署 `dpl_4e954pfbBEqfz5WTitE2E3nnmzKS` 已 Ready，並綁定 <https://guardai-olive.vercel.app>。
 
+### 7.6 匿名班級後端與 165 官方資料串接（2026-07-18）
+
+#### 本次需求與實作提示詞
+
+使用者要求：
+
+> 接著，繼續創建未完成的部分。
+
+依照前一版「已知限制與後續方向」，先選擇兩個可在現有權限內完整落地、且對競賽展示最有價值的項目：
+
+1. 將教師專區從 Demo 模擬資料升級為可實際建立與加入的匿名班級後端。
+2. 將知識庫預留的 165 資料介面改為政府官方 CSV 自動更新。
+
+實作提示詞重點為：「不建立學生帳號、不收集姓名與座號、不保存個別答案或可疑訊息；只保存產生全班趨勢必要的固定欄位，設定明確期限與結構驗證；外部官方來源失敗時保留人工查核內容，不以未驗證資料替代。」
+
+#### AI 編碼調用與程式
+
+| 類型 | 使用內容 | 用途 |
+| --- | --- | --- |
+| Next.js Route Handlers | `/api/classes`、`/api/classes/[code]`、`join`、`results` | 建立班級、匿名加入、提交成果與讀取彙總 |
+| Upstash Redis | SET NX、Set、Hash、TTL、Pipeline | 保存 30 天班級設定、匿名參與集合與成果 Hash |
+| Node Crypto | 隨機班級代碼、SHA-256 加鹽雜湊 | 產生不易混淆代碼並避免保存裝置 UUID 原值 |
+| Zod | Strict object、固定情境包、固定常錯概念 | 拒絕姓名、自由文字、額外欄位與超出範圍分數 |
+| Next.js ISR／Fetch Cache | 每日 `revalidate=86400` | 每日檢查 165 官方 CSV，降低來源負載 |
+| 自製 CSV 狀態機解析器 | 引號、逗號、多行、雙引號跳脫 | 不增加額外套件，正確處理官方結構化檔 |
+| agent-browser | 390×844 行動版、互動元素、錯誤 overlay | 驗證教師建立、學生加入、學習護照與知識庫 |
+
+#### 資料最小化設計
+
+1. 教師不能輸入自由班名或姓名，只選擇學生、親子、長者三種固定情境包。
+2. 班級代碼使用 `GUARD-XXXXXX` 格式，避開 0／O／1／I 等易混淆字元。
+3. 瀏覽器產生隨機 UUID；伺服器加入班級代碼與祕密 Salt 後做 SHA-256，只保存 32 字元不可逆雜湊。
+4. 成果 API 只接受前測、後測、闖關分數、判讀次數及固定常錯概念。
+5. Zod 使用 strict schema；若夾帶 `studentName` 等額外欄位會拒絕。
+6. 班級、參與集合與成果 Hash 均設 30 天 TTL；教師只能取得人數、完成率、平均與常錯概念。
+7. 建立、加入與提交另設匿名端點速率限制，避免公開網站被大量寫入。
+
+#### 165 官方開放資料
+
+- 資料集：<https://data.gov.tw/dataset/38262>
+- 提供機關：警政署。
+- 欄位：編號、標題、發佈時間、發佈內容。
+- 格式：UTF-8 CSV；實測 HTTP 200。
+- 授權：政府資料開放授權條款第 1 版，免費。
+- 更新策略：每日重新驗證一次，顯示最新可取得的 6 筆；若回應失敗、Content-Type 改變或欄位 Schema 改變，官方即時區塊顯示暫時不可用，14 類人工查核教學卡仍正常。
+
+#### 調整、修正與測試
+
+1. React 19 ESLint 發現 Effect 同步 setState，改用 `requestAnimationFrame` 在下一幀載入 localStorage。
+2. 第一次瀏覽器自動點擊因 PowerShell 將 `@e12` 解讀為變數，將元素參照加引號後重試成功；網站本身沒有錯誤。
+3. Next.js 第一次 build 發現 Route Segment 的 `revalidate` 不能使用算式，改為靜態常值 `86400` 後成功。
+4. `npm test`：50／50 通過，包括原 42 項、5 項匿名班級與 3 項官方 CSV 測試。
+5. `npm run lint`、`npx tsc --noEmit`、`npm run build`：全部通過。
+6. 真實 Redis 端對端：建立班級成功；加入後 participants=1、completed=0；提交後 participants=1、completed=1、completionRate=100，前測 60、後測 80、最常忽略「更換入口」。
+7. 165 API：HTTP 200、`sourceMode=official-open-data`、6 筆、Cache-Control 每日更新；知識庫頁可見官方區塊。
+8. 390px 瀏覽器驗收：教師頁、加入頁、學習護照與知識庫均有內容、無 Next.js error overlay、無 page error。
+9. 最終部署：`dpl_AsCtsSG7ionxHiqcAQtLGpspZdfH`，<https://guardai-olive.vercel.app>。
+
 ## 八、可用於成果發表的重點
 
 ### 8.1 問題意識
@@ -571,6 +629,7 @@ npm run dev
 | 2026-07-18 | 文件 1.2.0 | 補記研究方法、海報提示詞、QR 圖像安全修正、程式調用與部署驗證 | 本次文件更新提交（Commit 請見 Git 歷史） |
 | 2026-07-18 | 網站 0.2.1／文件 1.2.1 | 將「防詐闖關」導覽頁籤移至「知識庫」與「隱私與 AI」之間，並同步更新建置紀錄 | `3071e03`；`dpl_GsrzCNAQVgu22PeJxDahLDMDrv3F` |
 | 2026-07-18 | 網站 0.3.0／文件 1.3.0 | 生成式 AI 模式切換、20 秒逾時、每分鐘與每日用量限制、40 個案例／42 項測試，以及不保存原始訊息的安全設計 | `dpl_4e954pfbBEqfz5WTitE2E3nnmzKS`；Git Commit 請見本次歷史 |
+| 2026-07-18 | 網站 0.4.0／文件 1.4.0 | 完成 30 天匿名班級後端、學生加入與成果提交、教師 Redis 彙總、165 官方 CSV 每日更新，測試增至 50 項 | `dpl_AsCtsSG7ionxHiqcAQtLGpspZdfH`；Git Commit 請見本次歷史 |
 
 ## 十、未來每次更新的紀錄模板
 

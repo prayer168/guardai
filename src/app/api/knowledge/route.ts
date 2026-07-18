@@ -6,6 +6,7 @@ export async function GET() {
   return Response.json({
     sourceMode: "curated",
     openDataDataset: "https://data.gov.tw/dataset/38262",
+    officialFeedApi: "/api/knowledge/official",
     lastReviewed: "2026-07-18",
     researchMode: "official-sources",
     itemCount: knowledgeItems.length,

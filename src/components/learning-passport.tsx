@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, BarChart3, BookOpenCheck, RotateCcw, ShieldCheck } from "lucide-react";
+import { ArrowRight, BarChart3, BookOpenCheck, RotateCcw, Send, ShieldCheck, Users } from "lucide-react";
 import { useEffect, useState } from "react";
+
+import { classroomPackLabels, type ClassroomPack } from "@/lib/classroom";
 
 type Question = {
   id: string;
@@ -29,6 +31,7 @@ const postQuestions: Question[] = [
 ];
 
 type StoredAssessment = { score: number; answers: Record<string, number>; completedAt: string };
+type StoredChallenge = { correctCount: number; total: number; completedAt: string };
 
 function calculateScore(questions: Question[], answers: Record<string, number>) {
   const correct = questions.filter((question) => answers[question.id] === question.answer).length;
@@ -41,7 +44,13 @@ export function LearningPassport() {
   const [preResult, setPreResult] = useState<StoredAssessment | null>(null);
   const [postResult, setPostResult] = useState<StoredAssessment | null>(null);
   const [challengeComplete, setChallengeComplete] = useState(false);
+  const [challengeScore, setChallengeScore] = useState<number | null>(null);
   const [analysisCount, setAnalysisCount] = useState(0);
+  const [classCode, setClassCode] = useState("");
+  const [classPack, setClassPack] = useState<ClassroomPack | null>(null);
+  const [classStatus, setClassStatus] = useState("");
+  const [classSubmitted, setClassSubmitted] = useState(false);
+  const [classBusy, setClassBusy] = useState(false);
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -54,8 +63,29 @@ export function LearningPassport() {
         window.localStorage.removeItem("guardai-pretest");
         window.localStorage.removeItem("guardai-posttest");
       }
-      setChallengeComplete(Boolean(window.localStorage.getItem("guardai-challenge")));
+      const savedChallenge = window.localStorage.getItem("guardai-challenge");
+      if (savedChallenge) {
+        try {
+          const parsedChallenge = JSON.parse(savedChallenge) as StoredChallenge;
+          setChallengeComplete(true);
+          setChallengeScore(Math.round((parsedChallenge.correctCount / parsedChallenge.total) * 100));
+        } catch {
+          window.localStorage.removeItem("guardai-challenge");
+        }
+      }
       setAnalysisCount(Number(window.localStorage.getItem("guardai-analysis-count") ?? "0"));
+      const activeClassCode = window.localStorage.getItem("guardai-class-code") ?? "";
+      setClassCode(activeClassCode);
+      setClassSubmitted(Boolean(activeClassCode && window.localStorage.getItem(`guardai-class-submitted:${activeClassCode}`)));
+      if (activeClassCode) {
+        void fetch(`/api/classes/${encodeURIComponent(activeClassCode)}`, { cache: "no-store" })
+          .then(async (response) => {
+            if (!response.ok) throw new Error();
+            return response.json() as Promise<{ classroom: { pack: ClassroomPack } }>;
+          })
+          .then((body) => setClassPack(body.classroom.pack))
+          .catch(() => setClassStatus("班級代碼可能已過期，請向教師確認。"));
+      }
     });
 
     return () => window.cancelAnimationFrame(frame);
@@ -76,9 +106,53 @@ export function LearningPassport() {
     setPreResult(null);
     setPostResult(null);
     setChallengeComplete(false);
+    setChallengeScore(null);
     setAnalysisCount(0);
     setPreAnswers({});
     setPostAnswers({});
+    if (classCode) {
+      window.localStorage.removeItem(`guardai-class-submitted:${classCode}`);
+      setClassSubmitted(false);
+    }
+  }
+
+  function learnerId() {
+    const stored = window.localStorage.getItem("guardai-learner-id");
+    if (stored) return stored;
+    const created = window.crypto.randomUUID();
+    window.localStorage.setItem("guardai-learner-id", created);
+    return created;
+  }
+
+  async function submitAnonymousClassResult() {
+    if (!classCode || !preResult || !postResult || challengeScore === null) return;
+    setClassBusy(true);
+    setClassStatus("");
+    try {
+      const response = await fetch(`/api/classes/${encodeURIComponent(classCode)}/results`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          learnerId: learnerId(),
+          preScore: preResult.score,
+          postScore: postResult.score,
+          challengeScore,
+          analysisCount,
+          missedConcepts,
+        }),
+      });
+      const body = (await response.json().catch(() => null)) as { error?: unknown } | null;
+      if (!response.ok) {
+        throw new Error(typeof body?.error === "string" ? body.error : "匿名成果暫時無法提交。");
+      }
+      window.localStorage.setItem(`guardai-class-submitted:${classCode}`, new Date().toISOString());
+      setClassSubmitted(true);
+      setClassStatus("匿名成果已提交；教師只會看到全班彙總。");
+    } catch (reason) {
+      setClassStatus(reason instanceof Error ? reason.message : "匿名成果暫時無法提交。");
+    } finally {
+      setClassBusy(false);
+    }
   }
 
   const improvement = preResult && postResult ? postResult.score - preResult.score : null;
@@ -108,6 +182,35 @@ export function LearningPassport() {
           </div>
         </section>
       ) : null}
+
+      {classCode ? (
+        <section className="section-card">
+          <div className="feature-row">
+            <span><Users aria-hidden="true" /></span>
+            <div>
+              <p className="eyebrow">匿名班級 {classCode}</p>
+              <h2 className="section-title">提交全班彙總所需的學習成果</h2>
+              <p className="mt-2 leading-7 text-ink-muted">
+                {classPack ? `教師指派：${classroomPackLabels[classPack]}。` : ""}
+                只送出前測、後測、闖關分數、判讀次數及常忽略概念；不送出姓名、個別答案或可疑訊息。
+              </p>
+              {preResult && postResult && challengeScore !== null ? (
+                <button type="button" className="button button-primary mt-5" disabled={classBusy} onClick={submitAnonymousClassResult}>
+                  <Send aria-hidden="true" size={18} />{classBusy ? "提交中…" : classSubmitted ? "更新匿名成果" : "提交匿名成果"}
+                </button>
+              ) : (
+                <p className="mt-4 rounded-xl bg-ivory-deep/65 p-4 font-bold text-navy">完成前測、六題闖關與後測後即可提交。</p>
+              )}
+              <p className="mt-3 min-h-6 text-sm font-bold text-navy" aria-live="polite">{classStatus}</p>
+            </div>
+          </div>
+        </section>
+      ) : (
+        <section className="notice notice-info">
+          <Users aria-hidden="true" />
+          <div><strong>有教師提供班級代碼嗎？</strong><p>先到 <Link href="/join" className="font-black underline underline-offset-4">加入匿名班級</Link>，完成後即可把分數以匿名彙總方式提交。</p></div>
+        </section>
+      )}
 
       <AssessmentSection
         title="第一站｜五題前測"

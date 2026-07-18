@@ -197,7 +197,7 @@ export function KnowledgeBrowser() {
         <ExternalLink aria-hidden="true" />
         <div>
           <strong>官方來源會持續更新</strong>
-          <p>目前內容由警政署、刑事警察局、勞動部、地方檢察署與行政院消保會資料整理；<code>/api/knowledge</code> 已保留未來串接 165 開放資料的介面。</p>
+          <p>14 類教學卡由警政署、刑事警察局、勞動部、地方檢察署與行政院消保會資料整理；頁面上方與 <code>/api/knowledge/official</code> 每日檢查 165 詐騙闢謠官方開放資料，來源不可用時不會用未驗證內容取代。</p>
         </div>
       </section>
     </div>
