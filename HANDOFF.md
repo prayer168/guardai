@@ -2,9 +2,9 @@
 
 最後更新：2026-10-06
 
-網站版本：0.5.0（決賽優化，尚未部署）
+網站版本：0.5.0（決賽優化，已部署）
 
-文件版本：1.1.0
+文件版本：1.2.0
 
 ## 1. 接手前先讀
 
@@ -34,14 +34,14 @@ GuardAI 反詐守門員是參加「2026 TAIA AI 創意設計大賽」高中職�
 | 項目 | 目前狀態 |
 | --- | --- |
 | GitHub | <https://github.com/prayer168/guardai> |
-| Branch | `agent/remove-home-hero-label` |
-| 最新已提交功能 Commit | `02f7e3d` — `Record hero cleanup deployment` |
+| Branch | `main` |
+| 最新已提交功能 Commit | `be1d212` — `Add finalist showcase and offline safety (#1)` |
 | 正式網站 | <https://guardai-olive.vercel.app> |
 | Vercel 專案 | `prayer168s-projects/guardai` |
-| 最新 Production Deployment | `dpl_6gFd4ebPSjzeERB5q2yCdVge2pwW` |
+| 0.5.0 驗證用 Production Deployment | `dpl_7Hwe8QRS5oo2EMtZze9sypqMu3wK` |
 | 部署方式 | 目前使用 `npx vercel --prod --yes`；GitHub 自動部署尚未完成授權 |
 
-> 0.5.0 決賽優化目前只在本機工作區，通過最終驗收前不得部署。正式網站仍是 0.4.x Production。
+> PR #1 已 squash merge 至 `main`。0.5.0 於 2026-10-06 08:02（Asia/Taipei）部署完成，Vercel 狀態 Ready；公開站、八步展示、主要 API、390px 畫面與兩種離線路徑均已驗證。
 
 ## 4. 已完成的功能
 
@@ -205,7 +205,7 @@ npm run build
 - `npm test`：53／53。
 - ESLint：通過。
 - TypeScript：通過。
-- Production build：通過，共 15 個輸出路由。
+- Production build：通過，共 16 個輸出路由。
 - `npm audit --omit=dev`：0 個已知漏洞。
 - 390×844 瀏覽器驗收：教師、加入班級、學習護照與知識庫無錯誤 overlay 或 page error。
 

@@ -456,11 +456,11 @@ GitHub Repository 目前提供完整原始碼與版本紀錄，但 GitHub Pages 
 | 正式網站 | <https://guardai-olive.vercel.app> |
 | Vercel 專案 | `prayer168s-projects/guardai` |
 | 部署狀態 | Ready |
-| 最新部署 ID | `dpl_6gFd4ebPSjzeERB5q2yCdVge2pwW` |
-| 部署時間 | 2026-07-18 |
+| 0.5.0 驗證用部署 ID | `dpl_7Hwe8QRS5oo2EMtZze9sypqMu3wK` |
+| 部署時間 | 2026-10-06 08:02（Asia/Taipei） |
 | 執行模式 | Production 已設定 `live`、伺服器端 API Key 與每日用量保護；目前因 OpenAI 專案額度不足而安全回退 Mock |
-| 建置結果 | Next.js、TypeScript 與 15 個靜態／動態輸出項目建置成功 |
-| 公開頁面測試 | 八個主要頁面、匿名班級 API、`/api/knowledge` 與官方闢謠 API 均回傳預期狀態 |
+| 建置結果 | Next.js 16.3.8、TypeScript 與 16 個靜態／動態輸出路由建置成功；build duration 39 秒 |
+| 公開頁面測試 | 首頁、競賽展示、單檔離線備援、隱私、教師、`/api/knowledge` 與官方闢謠 API 均回傳 HTTP 200 |
 | 分析 API 測試 | HTTP 200；每日配額保護啟用，回傳 4 個線索、3 個查證問題與 4 個安全行動 |
 | 手機測試 | 390px 等級畫面無水平溢位，首頁與判讀流程可完整操作 |
 | Runtime log | 部署後未發現 error log |
@@ -633,6 +633,11 @@ npm run dev
 - 驗收：53／53 單元測試、ESLint、TypeScript 與 Production build 已通過；桌機、平板、手機、鍵盤、reduced-motion 與兩層離線路徑已實測。最終部署前仍需再跑完整閘門。
 - 安全閘門修正：2026-10-06 `npm audit` 發現 Next.js 16.2.10 已列入 critical 公告；依 Next.js 官方 2026 年 9 月安全公告升級至 16.3.8 Active LTS，React／React DOM 升至 19.3.0，PostCSS 與傳遞相依同步更新。升級後 Production audit 為 0，全部測試與瀏覽器流程重新通過。
 - 未採用 `npm audit fix --force`：它會把 `eslint-config-next` 降級到 14.x。完整 audit 剩餘項目只位於 ESLint 開發工具鏈，不進入 Production bundle，已記錄於測試報告。
+- GitHub 與發布：PR #1 已 squash merge 至 `main`，功能提交 `be1d212`；Vercel Production `dpl_7Hwe8QRS5oo2EMtZze9sypqMu3wK` 已 Ready 並綁定正式網址。
+- 正式站驗收：首頁、`/showcase`、單檔 HTML、隱私、教師與兩個知識庫 API 均為 HTTP 200；桌面與 390px 無水平溢出或錯誤 overlay，reduced-motion 生效。
+- 離線驗收：線上展示載入後可在 browser offline 重設並返回學生情境；單檔備援離線後仍可進入第 2 步。
+- 無障礙與維運：Production `/showcase` 的 axe-core WCAG 2 A／AA 掃描為 0 violations；最近一小時 Vercel error log 為空。
+- 正式站截圖：新增 `docs/screenshots/2026-10-finalist-optimization/03-production/`，保存首頁、展示步驟 1／8 與離線備援畫面。
 
 ### 2026-10-05｜建立 YouTube 建置歷史文件
 
@@ -673,8 +678,8 @@ npm run dev
 | 2026-07-18 | 網站 0.3.0／文件 1.3.0 | 生成式 AI 模式切換、20 秒逾時、每分鐘與每日用量限制、40 個案例／42 項測試，以及不保存原始訊息的安全設計 | `dpl_4e954pfbBEqfz5WTitE2E3nnmzKS`；Git Commit 請見本次歷史 |
 | 2026-07-18 | 網站 0.4.0／文件 1.4.0 | 完成 30 天匿名班級後端、學生加入與成果提交、教師 Redis 彙總、165 官方 CSV 每日更新，測試增至 50 項 | `dpl_AsCtsSG7ionxHiqcAQtLGpspZdfH`；Git Commit 請見本次歷史 |
 | 2026-07-18 | Production 0.4.1／文件 1.4.1 | 移除首頁 Hero「AI × 查證力 × 教育科技」標籤；補強即時評測錯誤診斷並記錄 `insufficient_quota` 實測 | `2c017a9`；`dpl_6gFd4ebPSjzeERB5q2yCdVge2pwW` |
-| 2026-10-05 | 文件 1.5.0 | 建立適合 YouTube、口頭報告與成果發表使用的 `history.md`，整理故事時間軸、技術演進、失敗修正與影片素材 | 尚未提交／部署 |
-| 2026-10-06 | 網站 0.5.0／文件 1.6.0 | 新增 3–5 分鐘競賽展示、單檔離線備援、AI 安全與評測證據、三種情境、實證空狀態及 53 項測試 | 本機候選版本，尚未提交／部署 |
+| 2026-10-05 | 文件 1.5.0 | 建立適合 YouTube、口頭報告與成果發表使用的 `history.md`，整理故事時間軸、技術演進、失敗修正與影片素材 | 已隨 PR #1 合併至 `main` |
+| 2026-10-06 | 網站 0.5.0／文件 1.6.0 | 新增 3–5 分鐘競賽展示、單檔離線備援、AI 安全與評測證據、三種情境、實證空狀態及 53 項測試 | `be1d212`；`dpl_7Hwe8QRS5oo2EMtZze9sypqMu3wK`；<https://guardai-olive.vercel.app> |
 
 ## 十、未來每次更新的紀錄模板
 

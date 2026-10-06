@@ -6,6 +6,8 @@ GuardAI 是為 2026 TAIA AI 創意設計大賽教育科技領域製作的響應�
 
 正式展示網站：<https://guardai-olive.vercel.app>
 
+目前正式版本：0.5.0（2026-10-06）；競賽展示可直接開啟 <https://guardai-olive.vercel.app/showcase>，單檔備援位於 <https://guardai-olive.vercel.app/guardai-offline-demo.html>。
+
 完整的需求提示詞、AI 編碼調用、修正、測試與部署紀錄，請參閱 [`docs/BUILD_JOURNAL.md`](docs/BUILD_JOURNAL.md)。適合轉成 YouTube 影片、口頭報告與成果發表的故事時間軸、章節與畫面清單，請參閱 [`history.md`](history.md)。兩份文件都會隨專案持續更新。
 
 ## 完成功能
@@ -82,7 +84,7 @@ npm run build
 
 ## 部署到 Vercel
 
-目前 Production 網站為 <https://guardai-olive.vercel.app>。
+目前 Production 網站為 <https://guardai-olive.vercel.app>。0.5.0 已於 2026-10-06 以 Vercel CLI 部署並完成公開網址、主要 API、390px 手機與斷網流程驗證。
 
 1. 將 `guardai` 專案推送至 GitHub。
 2. 在 Vercel 匯入儲存庫，Framework Preset 選 Next.js。

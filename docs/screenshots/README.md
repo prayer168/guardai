@@ -5,7 +5,7 @@
 ## 命名與資料夾規則
 
 - 每一輪重要改版使用日期與主題建立資料夾。
-- 子資料夾依 `00-baseline`、`01-implementation`、`02-final-verification` 排序。
+- 子資料夾依 `00-baseline`、`01-implementation`、`02-final-verification`、`03-production` 排序。
 - 檔名包含頁面、狀態與 viewport，例如 `showcase-step-3-1440x1000.png`。
 - 錯誤修正保留 before／after，不能只留下修正後畫面。
 - 截圖不得包含 API Key、Token、Salt、真實個資或使用者貼入的原始可疑訊息。
@@ -29,3 +29,11 @@
 - `showcase-step-1-1440x1000.png`
 - `showcase-step-3-768x1024.png`
 - `showcase-step-8-390x844.png`
+
+`2026-10-finalist-optimization/03-production/` 保存 2026-10-06 正式部署後，從 <https://guardai-olive.vercel.app> 重新擷取的實機畫面：
+
+- `home-1440x1000.png`
+- `showcase-step1-1440x1000.png`
+- `showcase-step8-390x844.png`
+- `showcase-step8-top-390x844.png`
+- `offline-demo-step2-390x844.png`

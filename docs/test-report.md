@@ -1,10 +1,16 @@
 # GuardAI 0.5.0 決賽優化測試報告
 
-測試日期：2026-10-05 至 2026-10-06（Asia/Taipei）  
-測試版本：0.5.0，本機候選版本，尚未部署  
-框架版本：Next.js 16.3.8 Active LTS、React／React DOM 19.3.0  
-正式網站基線：<https://guardai-olive.vercel.app>  
-瀏覽器工具：agent-browser 0.33.0（Chromium）  
+測試日期：2026-10-05 至 2026-10-06（Asia/Taipei）
+
+測試版本：0.5.0，已部署 Production
+
+框架版本：Next.js 16.3.8 Active LTS、React／React DOM 19.3.0
+
+正式網站：<https://guardai-olive.vercel.app>
+
+驗證用部署：`dpl_7Hwe8QRS5oo2EMtZze9sypqMu3wK`（Ready，2026-10-06）
+
+瀏覽器工具：agent-browser 0.33.0（Chromium）
 
 ## 1. 測試範圍
 
@@ -83,8 +89,6 @@
 - `privacy-ai-safety-1440x1000.png`
 - `teacher-evidence-768x1024.png`
 
-最終候選版本的截圖會放在 `02-final-verification/`；正式部署完成後需再建立 `03-production/` 並重跑公開網址。
-
 最終候選版本已保存：
 
 - `02-final-verification/home-showcase-entry-1440x1000.png`
@@ -92,11 +96,32 @@
 - `02-final-verification/showcase-step-3-768x1024.png`
 - `02-final-verification/showcase-step-8-390x844.png`
 
-## 7. 尚未通過／不得宣稱
+正式站實機截圖已保存：
+
+- `03-production/home-1440x1000.png`
+- `03-production/showcase-step1-1440x1000.png`
+- `03-production/showcase-step8-390x844.png`
+- `03-production/showcase-step8-top-390x844.png`
+- `03-production/offline-demo-step2-390x844.png`
+
+## 7. Production 公開網址驗收
+
+| 項目 | 結果 |
+| --- | --- |
+| Vercel 狀態 | Ready；build duration 39 秒 |
+| 公開路由 | `/`、`/showcase`、`/guardai-offline-demo.html`、`/privacy`、`/teacher` 全部 HTTP 200 |
+| 公開資料 API | `/api/knowledge`、`/api/knowledge/official` 全部 HTTP 200 |
+| 桌面展示 | 1 個 `h1`、8 個步驟、安全 Demo 標示、無水平溢出、無錯誤 overlay |
+| 390×844 | AI 技術／評測頁可操作，無水平溢出、無錯誤 overlay，reduced-motion 生效 |
+| 載入後斷網 | `/showcase` 可重新開始並回到學生情境；單檔備援可前進到第 2 步 |
+| WCAG 自動掃描 | axe-core 4.12.1；WCAG 2 A／AA 違規 0、待人工確認 0 |
+| Runtime error log | 最近一小時無 error 記錄 |
+
+## 8. 尚未通過／不得宣稱
 
 - OpenAI API Billing／額度尚未可用，因此完整 40 題即時生成式 AI 評測仍為「待完成」。
 - 沒有可公開的真實學生、家庭或長者試用資料，不宣稱人數、進步率、滿意度或成效。
-- 本報告目前只驗證本機 0.5.0 候選版本；未完成最終閘門前不部署。
+- Production 已通過本報告列出的技術與展示驗收；這不等於真實教學成效或即時模型準確率已被證明。
 
 ### 開發工具鏈公告
 

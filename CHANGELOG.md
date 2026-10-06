@@ -1,6 +1,6 @@
 # GuardAI 版本紀錄
 
-## 0.5.0｜2026-10-06｜決賽展示優化（尚未部署）
+## 0.5.0｜2026-10-06｜決賽展示優化（已正式發布）
 
 ### 新增
 
@@ -25,6 +25,12 @@
 - 40／40 是程式／Mock 規則測試，不是即時生成式 AI 準確率。
 - OpenAI API Billing／額度尚未完成前，即時 40 題評測仍為「待完成」。
 - 教師頁數字是清楚標示的 Demo 模擬資料，尚無可公開的真實學習成效。
+
+### 發布
+
+- PR #1 已 squash merge 至 `main`，功能提交為 `be1d212`。
+- Vercel Production 部署 `dpl_7Hwe8QRS5oo2EMtZze9sypqMu3wK` 狀態 Ready，正式網址為 <https://guardai-olive.vercel.app>。
+- 公開首頁、`/showcase`、單檔離線備援、隱私頁、教師頁與知識庫 API 均回傳 HTTP 200；最近一小時未發現 Vercel error log。
 
 ## 0.4.1｜2026-07-18
 

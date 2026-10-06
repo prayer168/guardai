@@ -672,7 +672,7 @@ QR／付款碼海報初稿出現近似可掃描圖樣。基於安全考量沒有
 - 實際鍵盤驗證：Tab 可依序聚焦跳至內容、品牌、手機選單、重設與下載；Enter 可開啟手機導覽。
 - reduced-motion 已透過瀏覽器模擬並確認生效。
 - AI 技術頁、教師實證空狀態與 1440／768／390 畫面已新增截圖。
-- 網站版本提升為 0.5.0，並新增 `CHANGELOG.md` 與 `docs/test-report.md`；正式部署仍待最終驗收。
+- 網站版本提升為 0.5.0，並新增 `CHANGELOG.md` 與 `docs/test-report.md`；此時先標記為候選版，完成下一階段驗收後才部署。
 
 ### 實作里程碑 3｜安全公告阻止部署，完成框架升級
 
@@ -682,4 +682,17 @@ QR／付款碼海報初稿出現近似可掃描圖樣。基於安全考量沒有
 - 完整 audit 尚有 ESLint 開發工具鏈公告；官方自動修正會破壞性降級 Next.js ESLint 設定，因此不使用 `--force`。這項限制已寫入測試報告，等待上游修補。
 - 升級後重新驗證 1440×1000、768×1024、390×844、reduced-motion、重設、角色切換與斷網流程，均未出現水平溢出或錯誤 overlay。
 - 最終候選截圖保存於 `docs/screenshots/2026-10-finalist-optimization/02-final-verification/`。
+
+### 實作里程碑 4｜合併、正式部署與公開站驗收
+
+- PR #1 已 squash merge 至 `main`，功能提交為 `be1d212`（`Add finalist showcase and offline safety (#1)`）。
+- 2026-10-06 08:02（Asia/Taipei）以 Vercel CLI 發布 0.5.0；驗證用 Production Deployment 為 `dpl_7Hwe8QRS5oo2EMtZze9sypqMu3wK`，狀態 Ready，正式網址維持 <https://guardai-olive.vercel.app>。
+- Vercel 使用 2 vCPU／8 GB 建置環境，Next.js 16.3.8 Production build 約 39 秒，產生 16 個靜態與動態路由。
+- 從公開網址檢查首頁、競賽展示、單檔離線備援、隱私頁、教師頁、知識庫 API 與官方闢謠 API，全部回傳 HTTP 200。
+- 桌面 1440×1000 與手機 390×844 實測沒有水平溢出或 Next.js 錯誤 overlay；安全 Demo 標示、八步導覽、reduced-motion 與重設回學生情境均正常。
+- `/showcase` 先載入後切斷網路，仍可重新開始展示；`guardai-offline-demo.html` 離線後仍可從第 1 步前進到第 2 步。
+- Production `/showcase` 以 axe-core 4.12.1 掃描 WCAG 2 A／AA，violations 0、incomplete 0；最近一小時 Vercel error log 為空。
+- 正式站畫面保存於 `docs/screenshots/2026-10-finalist-optimization/03-production/`，可直接作為成果發表或 YouTube 的「上線證據」畫面。
+- **旁白建議：**「我們不只完成程式，也把部署後的網站重新用桌面、手機與斷網情境走過一次；現場即使沒有 AI API 或臨時斷線，核心教學流程仍可完成。」
+- **仍不能宣稱：**OpenAI Billing 尚未可用，因此 40 題即時生成式 AI 評測仍是待完成；目前可說的是 40／40 程式／Mock 規則測試與 53／53 自動測試通過。
 
