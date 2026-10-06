@@ -712,3 +712,15 @@ npm run dev
 5. 每次進行課堂測試，都只記錄匿名統計與使用回饋。
 6. 報告引用數據時，必須標示資料來源、樣本數與日期。
 7. 本文件與程式一起提交 Git，讓建置歷程可追溯。
+
+### 2026-10-06｜TAIA 入圍後 16 張簡報重製與驗證
+
+- 以原送審 PPTX 為基礎，保留 16 張頁數、Vermeer 光影、深海軍藍／暖象牙白／低飽和金色與主要視覺資產。
+- 依創新性、落地性、AI 技術應用深度重整敘事，補齊主題、使用者、AI 角色、操作流程、開發方式、證據與未來方向。
+- 使用正式站畫面呈現競賽展示、分析結果、教師 Demo 與 AI 安全架構；長截圖採比例裁切，避免拉伸。
+- 來源與講者備註包含 TAIA 官方頁、165 全民防騙網、165 打詐儀錶板、OpenAI Structured Outputs、正式站與 GitHub。
+- 將 53／53 自動測試、16 個 Production 路由、40／40 合成規則案例與真人成效待完成分開呈現；未宣稱即時 AI 40 題準確率。
+- Artifact tool 驗證：16 張、13.3333 × 7.5 英吋、package integrity 0 findings、layout 0 findings、first-party re-import 通過。
+- 輸出：`GuardAI_2026TAIA_決賽優化版_16張_20261006_v5.pptx`。
+- 驗收截圖：`docs/screenshots/2026-10-finalist-presentation/`。
+- 未改動網站程式或正式部署；真人前後測與 OpenAI Billing 恢復後的即時模型評測仍待完成。

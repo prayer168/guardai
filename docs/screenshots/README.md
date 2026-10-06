@@ -37,3 +37,18 @@
 - `showcase-step8-390x844.png`
 - `showcase-step8-top-390x844.png`
 - `offline-demo-step2-390x844.png`
+
+## 2026-10 決賽簡報優化
+
+`2026-10-finalist-presentation/` 保存原送審簡報與入圍後優化版的視覺證據：
+
+- `before-original-montage.webp`：原 16 張簡報總覽。
+- `after-final-montage-v2.webp`：第一輪最後視覺檢查後的 montage。
+- `after-final-montage-v5.webp`：修正第 12 頁標題擁擠與第 13 頁情境列點後的最終 16 張總覽。
+- `slide-08-demo-flow.png`：3–5 分鐘正式 Demo 流程。
+- `slide-11-ai-depth.png`：Prompt、Structured Outputs、隱私與備援。
+- `slide-12-edtech-evidence.png`：學習目標、練習、回饋、評量與教師端。
+- `slide-14-validation-boundary.png`：程式測試、規則案例與真人成效的證據邊界。
+- `slide-16-sources.png`：官方來源與可驗證連結。
+
+畫面可用於 YouTube 建置歷程、競賽口頭報告與成果發表。第 12 頁的 Demo 模擬數字不可當作真人研究結果。
