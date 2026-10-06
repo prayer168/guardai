@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { AlertCircle, ArrowRight, Eraser, LoaderCircle, LockKeyhole, Sparkles } from "lucide-react";
 import { FormEvent, useEffect, useRef, useState } from "react";
 
@@ -27,6 +28,7 @@ export function Analyzer() {
   const [message, setMessage] = useState("");
   const [response, setResponse] = useState<ApiResponse | null>(null);
   const [error, setError] = useState("");
+  const [offlineSuggested, setOfflineSuggested] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
   const resultRef = useRef<HTMLDivElement>(null);
@@ -42,6 +44,7 @@ export function Analyzer() {
   async function analyze(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
+    setOfflineSuggested(false);
     setResponse(null);
 
     if (message.trim().length < 8) {
@@ -72,7 +75,15 @@ export function Analyzer() {
       window.localStorage.setItem("guardai-analysis-count", String(current + 1));
       window.setTimeout(() => resultRef.current?.focus(), 50);
     } catch (reason) {
-      setError(reason instanceof Error ? reason.message : "分析暫時無法完成，請稍後再試。");
+      const networkFailure = !window.navigator.onLine || reason instanceof TypeError;
+      setOfflineSuggested(networkFailure);
+      setError(
+        networkFailure
+          ? "目前無法連上分析服務。你的訊息沒有被保存；可改用安全 Demo 完成查證練習。"
+          : reason instanceof Error
+            ? reason.message
+            : "分析暫時無法完成，請稍後再試。",
+      );
     } finally {
       setLoading(false);
     }
@@ -82,6 +93,7 @@ export function Analyzer() {
     setResponse(null);
     setMessage("");
     setError("");
+    setOfflineSuggested(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -141,8 +153,9 @@ export function Analyzer() {
             </fieldset>
 
             {error ? (
-              <div className="mt-5 flex items-center gap-2 rounded-xl bg-coral/10 p-4 font-semibold text-coral-dark" role="alert">
-                <AlertCircle aria-hidden="true" /> {error}
+              <div className="mt-5 rounded-xl bg-coral/10 p-4 font-semibold text-coral-dark" role="alert">
+                <div className="flex items-start gap-2"><AlertCircle aria-hidden="true" className="mt-0.5 shrink-0" /> <p>{error}</p></div>
+                {offlineSuggested ? <Link href="/showcase" className="button button-outline mt-4">改用離線競賽展示 <ArrowRight aria-hidden="true" size={18} /></Link> : null}
               </div>
             ) : null}
 

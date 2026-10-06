@@ -1,8 +1,10 @@
 # GuardAI 專案交接文件
 
-最後更新：2026-07-18  
-網站版本：0.4.0  
-文件版本：1.0.0
+最後更新：2026-10-06
+
+網站版本：0.5.0（決賽優化，尚未部署）
+
+文件版本：1.1.0
 
 ## 1. 接手前先讀
 
@@ -32,14 +34,27 @@ GuardAI 反詐守門員是參加「2026 TAIA AI 創意設計大賽」高中職�
 | 項目 | 目前狀態 |
 | --- | --- |
 | GitHub | <https://github.com/prayer168/guardai> |
-| Branch | `main` |
-| 最新功能 Commit | `4e71f59` — `Add anonymous classrooms and official 165 feed` |
+| Branch | `agent/remove-home-hero-label` |
+| 最新已提交功能 Commit | `02f7e3d` — `Record hero cleanup deployment` |
 | 正式網站 | <https://guardai-olive.vercel.app> |
 | Vercel 專案 | `prayer168s-projects/guardai` |
-| 最新 Production Deployment | `dpl_AsCtsSG7ionxHiqcAQtLGpspZdfH` |
+| 最新 Production Deployment | `dpl_6gFd4ebPSjzeERB5q2yCdVge2pwW` |
 | 部署方式 | 目前使用 `npx vercel --prod --yes`；GitHub 自動部署尚未完成授權 |
 
+> 0.5.0 決賽優化目前只在本機工作區，通過最終驗收前不得部署。正式網站仍是 0.4.x Production。
+
 ## 4. 已完成的功能
+
+### 4.0 競賽展示與離線備援（0.5.0）
+
+- `/showcase` 提供約 4.5 分鐘、八段式引導展示。
+- 流程依序呈現問題差異、合成訊息、原文風險線索、三個查證問題、安全行動、求助摘要、教學成果與 AI 安全／評測。
+- 模式固定標示「安全 Demo 引擎」，不呼叫 API，不會被誤認為即時模型。
+- `public/guardai-offline-demo.html` 是無外部資源的單檔離線備援，可下載後直接以 `file://` 開啟。
+- 學生、親子／長者、教師三種情境均有角色、問題、步驟、安全決策、學習證據與效益。
+- 40／40 只標示為程式／Mock 規則測試；即時生成式 AI 評測仍是「待完成」。
+- 教師 Demo 與真實試用證據分區，沒有真實資料時明確顯示待完成。
+- 一般分析頁在瀏覽器斷網時顯示繁體中文說明與安全 Demo 恢復入口。
 
 ### 4.1 AI 判讀
 
@@ -143,6 +158,12 @@ GuardAI 反詐守門員是參加「2026 TAIA AI 創意設計大賽」高中職�
 | 官方 CSV 解析 | `src/lib/official-rumors.ts` |
 | 官方來源抓取 | `src/lib/official-rumors-source.ts` |
 | 完整歷程 | `docs/BUILD_JOURNAL.md` |
+| YouTube／成果故事素材 | `history.md` |
+| 競賽展示資料 | `src/lib/showcase.ts` |
+| 競賽展示互動 | `src/components/showcase-experience.tsx` |
+| 單檔離線備援 | `public/guardai-offline-demo.html` |
+| 驗收報告 | `docs/test-report.md` |
+| 截圖證據 | `docs/screenshots/` |
 
 ## 7. 環境變數
 
@@ -162,25 +183,26 @@ Production 已在 Vercel 設定上述必要變數。不要執行會覆寫 `.env.
 
 ## 8. 測試與驗收
 
-目前共有 50 項測試：
+目前共有 53 項測試：
 
 - 40 個反詐、正常訊息與 Prompt Injection 情境。
 - 敏感資料遮罩與 `GUARDAI_AI_MODE` 切換。
 - 匿名班級 Strict Schema、代碼格式、彙總與空資料。
 - 官方 CSV 的逗號、引號、多行、排序、截斷與 Schema 變更。
+- 競賽展示步驟、3–5 分鐘範圍、Schema、三種角色與評測狀態。
 
 每次修改後至少執行：
 
 ```bash
 npm run lint
 npm test
-npx tsc --noEmit
+npm run typecheck
 npm run build
 ```
 
 目前最後結果：
 
-- `npm test`：50／50。
+- `npm test`：53／53。
 - ESLint：通過。
 - TypeScript：通過。
 - Production build：通過，共 15 個輸出路由。
@@ -192,9 +214,11 @@ npm run build
 ### P0：OpenAI API 額度
 
 - API Key、Vercel 環境變數、模型與程式都已部署。
-- 模型可用性檢查成功，但實際生成回覆 `insufficient_quota`。
+- 2026-07-18 使用本機安全保存的真正金鑰實測，約 1.8 秒後回覆 HTTP 429 `insufficient_quota`；請求已到達 OpenAI，但尚未進入內容品質評分。
+- Vercel 受保護環境變數以 CLI 下載時會得到 `[SENSITIVE]`，不可拿該值執行本機評測；本次診斷暫存檔已刪除。
 - 必須由帳號／專案擁有者在 OpenAI Platform 啟用 API Billing 或購買 API 額度。
-- 完成後不需重新建立金鑰；先執行小批次 `npm run test:live`，確認成本與輸出，再跑完整 40 案例。
+- 完成後不需重新建立金鑰；先用 `GUARDAI_LIVE_EVAL_LIMIT=5` 執行冒煙測試，通過後再跑完整 40 案例。
+- `tests/run-live-eval.ts` 已能顯示每題延遲、HTTP 狀態與錯誤代碼，並會遮罩疑似 API Key。
 - 未啟用額度前，Production 會安全回退 Mock。
 
 ### P1：實際教學成效

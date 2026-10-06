@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, BookOpenCheck, HandHeart, MessageCircleQuestion, MousePointerClick, SearchCheck, ShieldCheck, Users } from "lucide-react";
+import { ArrowRight, BadgeCheck, BookOpenCheck, HandHeart, MessageCircleQuestion, MousePointerClick, PlayCircle, SearchCheck, Users } from "lucide-react";
 
 import { verificationSteps } from "@/lib/content";
 
@@ -15,10 +15,7 @@ export default function HomePage() {
         <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-navy/80 to-transparent" />
         <div className="site-container relative flex min-h-[680px] items-center py-20 md:min-h-[720px]">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-4 py-2 text-sm font-bold text-gold">
-              <ShieldCheck aria-hidden="true" size={18} /> AI × 查證力 × 教育科技
-            </div>
-            <h1 className="mt-7 text-5xl font-black leading-[1.08] tracking-tight sm:text-6xl md:text-7xl">
+            <h1 className="text-5xl font-black leading-[1.08] tracking-tight sm:text-6xl md:text-7xl">
               GuardAI
               <span className="mt-2 block text-gold">反詐守門員</span>
             </h1>
@@ -30,6 +27,9 @@ export default function HomePage() {
               <Link href="/analyze" className="button button-gold button-large">貼上可疑訊息 <ArrowRight aria-hidden="true" /></Link>
               <Link href="/challenge" className="button button-ghost-light button-large">先練一題</Link>
             </div>
+            <Link href="/showcase" className="mt-4 inline-flex min-h-12 items-center gap-2 rounded-xl border border-gold/40 bg-navy/75 px-4 py-3 font-black text-gold underline-offset-4 hover:bg-navy focus-visible:underline">
+              <PlayCircle aria-hidden="true" size={20} />進入 3–5 分鐘競賽展示
+            </Link>
             <p className="mt-6 text-sm font-semibold text-ivory/60">不需註冊｜不永久儲存貼入訊息｜不自動開啟陌生網址</p>
           </div>
         </div>

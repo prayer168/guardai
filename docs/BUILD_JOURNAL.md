@@ -456,7 +456,7 @@ GitHub Repository 目前提供完整原始碼與版本紀錄，但 GitHub Pages 
 | 正式網站 | <https://guardai-olive.vercel.app> |
 | Vercel 專案 | `prayer168s-projects/guardai` |
 | 部署狀態 | Ready |
-| 最新部署 ID | `dpl_AsCtsSG7ionxHiqcAQtLGpspZdfH` |
+| 最新部署 ID | `dpl_6gFd4ebPSjzeERB5q2yCdVge2pwW` |
 | 部署時間 | 2026-07-18 |
 | 執行模式 | Production 已設定 `live`、伺服器端 API Key 與每日用量保護；目前因 OpenAI 專案額度不足而安全回退 Mock |
 | 建置結果 | Next.js、TypeScript 與 15 個靜態／動態輸出項目建置成功 |
@@ -589,7 +589,8 @@ npm run dev
 6. 真實 Redis 端對端：建立班級成功；加入後 participants=1、completed=0；提交後 participants=1、completed=1、completionRate=100，前測 60、後測 80、最常忽略「更換入口」。
 7. 165 API：HTTP 200、`sourceMode=official-open-data`、6 筆、Cache-Control 每日更新；知識庫頁可見官方區塊。
 8. 390px 瀏覽器驗收：教師頁、加入頁、學習護照與知識庫均有內容、無 Next.js error overlay、無 page error。
-9. 最終部署：`dpl_AsCtsSG7ionxHiqcAQtLGpspZdfH`，<https://guardai-olive.vercel.app>。
+9. 匿名班級與官方資料階段部署：`dpl_AsCtsSG7ionxHiqcAQtLGpspZdfH`，<https://guardai-olive.vercel.app>。
+10. 首頁標籤精簡階段部署：`dpl_6gFd4ebPSjzeERB5q2yCdVge2pwW`；Production HTTP 200，指定標籤已不存在，GuardAI 標題與核心標語仍正常。
 
 ## 八、可用於成果發表的重點
 
@@ -619,6 +620,47 @@ npm run dev
 
 ## 九、版本更新紀錄
 
+### 2026-10-06｜0.5.0 決賽展示與離線可靠性
+
+- 修改目的：入圍後依創新性、落地性、AI 技術深度與完成度四項評分需求，將既有功能整理成可在 3–5 分鐘完成且斷網可用的競賽展示。
+- 本次 Prompt：不得重建網站；新增首頁競賽入口、八段導覽、三種角色情境、AI 安全流程、40 題評測摘要、教學實證空狀態、失敗備援、三尺寸與無障礙驗收；未通過前不得部署。
+- AI 使用的工具／程式：Codex、Next.js 16 App Router、React 19、TypeScript、Tailwind CSS、Zod、Node Test Runner、agent-browser、Git 與 Vercel 現況檢查。
+- 新增檔案：`src/app/showcase/page.tsx`、`src/components/showcase-experience.tsx`、`src/lib/showcase.ts`、`public/guardai-offline-demo.html`、`tests/showcase.test.ts`、`docs/test-report.md`、`CHANGELOG.md` 與持續截圖資料夾。
+- 安全設計：展示使用預先驗證的合成資料，不呼叫 API；模式固定標示「安全 Demo 引擎」；單檔備援沒有外部資源；不保存原始訊息。
+- 評測誠信：40／40 只代表程式／Mock 規則測試；即時生成式 AI 因 Billing／額度仍顯示「待完成」。
+- 修正：瀏覽器真正斷網時不再裸露 `Failed to fetch`；改顯示繁中說明與離線展示入口。
+- 文件與影片素材：`history.md` 持續記錄實作與失敗修正，截圖集中於 `docs/screenshots/2026-10-finalist-optimization/`。
+- 驗收：53／53 單元測試、ESLint、TypeScript 與 Production build 已通過；桌機、平板、手機、鍵盤、reduced-motion 與兩層離線路徑已實測。最終部署前仍需再跑完整閘門。
+- 安全閘門修正：2026-10-06 `npm audit` 發現 Next.js 16.2.10 已列入 critical 公告；依 Next.js 官方 2026 年 9 月安全公告升級至 16.3.8 Active LTS，React／React DOM 升至 19.3.0，PostCSS 與傳遞相依同步更新。升級後 Production audit 為 0，全部測試與瀏覽器流程重新通過。
+- 未採用 `npm audit fix --force`：它會把 `eslint-config-next` 降級到 14.x。完整 audit 剩餘項目只位於 ESLint 開發工具鏈，不進入 Production bundle，已記錄於測試報告。
+
+### 2026-10-05｜建立 YouTube 建置歷史文件
+
+- 使用者需求：建立 `history.md`，持續記錄 GuardAI 的建置過程，作為未來拍攝 YouTube 影片的素材。
+- 資料來源：本文件、`HANDOFF.md`、README、Git 提交時間軸、部署與測試紀錄。
+- 新增內容：專案故事主線、時間軸、功能與技術演進、Prompt 演進、AI 編碼工具、失敗與修正、可證明與不可宣稱的成果、影片章節、必拍畫面及後續更新模板。
+- 安全原則：不寫入 API Key、Token、Salt、付款資料、個資或真實可疑訊息；Demo、程式測試與即時 AI 評測分開描述。
+- 修改檔案：`history.md`、`README.md`、`HANDOFF.md`、`docs/BUILD_JOURNAL.md`。
+
+### 2026-07-18｜首頁 Hero 標籤精簡
+
+- 使用者需求：移除首頁 Hero 上方「AI × 查證力 × 教育科技」膠囊標籤。
+- 修改檔案：`src/app/page.tsx`。
+- 調整與修正：刪除標籤、未再使用的 `ShieldCheck` 圖示匯入，以及標題為標籤預留的上方間距；Hero 的名稱、標語、說明與 CTA 均保留。
+- 驗證方式：ESLint、TypeScript、既有測試與 Production build。
+
+### 2026-07-18｜生成式 AI 冒煙測試與額度診斷
+
+- 使用者需求：先執行 3–5 題冒煙測試，通過後再跑完整 40 題實際 AI 評測。
+- 本次提示詞：使用既有 40 個合成案例，檢查風險等級、預期線索、安全行動、禁止斷言、敏感資料狀態與 JSON Schema；冒煙測試失敗時停止擴大測試。
+- AI 使用的工具／程式：OpenAI Responses API、`tests/run-live-eval.ts`、Zod `analysisSchema`、Vercel CLI 環境診斷。
+- 調整與修正：即時評測器新增每題延遲，以及經 API Key 遮罩的錯誤名稱、HTTP 狀態與錯誤代碼；避免所有失敗只顯示籠統的 `Error`。
+- 實測過程：Vercel 受保護環境變數下載值會被替換成 `[SENSITIVE]`，不可直接作為本機 API 憑證；改用先前安全保存於 `.env.local` 的真正金鑰進行單題確認。
+- 實測結果：真正金鑰請求於約 1.8 秒後收到 HTTP 429 `insufficient_quota`。這是 OpenAI 專案額度／Billing 問題，不是一般每分鐘 Rate Limit、JSON Schema 或模型輸出品質失敗。
+- 資料與隱私：只使用版本庫中的合成測試訊息；未使用、保存或記錄使用者原始可疑訊息，暫存環境檔已刪除，金鑰未寫入輸出或文件。
+- 執行決策：因冒煙測試未到達模型內容評分階段，完整 40 題未執行，避免無效請求。
+- 下一步：由 OpenAI 專案擁有者啟用 API Billing／購買 credits 或調高支出上限後，重新跑 5 題；5 題通過後立即執行 40 題完整評測。
+
 | 日期 | 文件／網站版本 | 內容 | Git Commit／部署 |
 | --- | --- | --- | --- |
 | 2026-07-18 | 網站 0.1.0 | 完成七大頁面、AI／Mock、安全遮罩、六題闖關、學習護照、教師 Demo、知識庫與隱私說明 | `c68a624`，GitHub Public Repo |
@@ -630,6 +672,9 @@ npm run dev
 | 2026-07-18 | 網站 0.2.1／文件 1.2.1 | 將「防詐闖關」導覽頁籤移至「知識庫」與「隱私與 AI」之間，並同步更新建置紀錄 | `3071e03`；`dpl_GsrzCNAQVgu22PeJxDahLDMDrv3F` |
 | 2026-07-18 | 網站 0.3.0／文件 1.3.0 | 生成式 AI 模式切換、20 秒逾時、每分鐘與每日用量限制、40 個案例／42 項測試，以及不保存原始訊息的安全設計 | `dpl_4e954pfbBEqfz5WTitE2E3nnmzKS`；Git Commit 請見本次歷史 |
 | 2026-07-18 | 網站 0.4.0／文件 1.4.0 | 完成 30 天匿名班級後端、學生加入與成果提交、教師 Redis 彙總、165 官方 CSV 每日更新，測試增至 50 項 | `dpl_AsCtsSG7ionxHiqcAQtLGpspZdfH`；Git Commit 請見本次歷史 |
+| 2026-07-18 | Production 0.4.1／文件 1.4.1 | 移除首頁 Hero「AI × 查證力 × 教育科技」標籤；補強即時評測錯誤診斷並記錄 `insufficient_quota` 實測 | `2c017a9`；`dpl_6gFd4ebPSjzeERB5q2yCdVge2pwW` |
+| 2026-10-05 | 文件 1.5.0 | 建立適合 YouTube、口頭報告與成果發表使用的 `history.md`，整理故事時間軸、技術演進、失敗修正與影片素材 | 尚未提交／部署 |
+| 2026-10-06 | 網站 0.5.0／文件 1.6.0 | 新增 3–5 分鐘競賽展示、單檔離線備援、AI 安全與評測證據、三種情境、實證空狀態及 53 項測試 | 本機候選版本，尚未提交／部署 |
 
 ## 十、未來每次更新的紀錄模板
 
