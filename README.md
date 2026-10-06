@@ -6,17 +6,27 @@ GuardAI 是為 2026 TAIA AI 創意設計大賽教育科技領域製作的響應�
 
 正式展示網站：<https://guardai-olive.vercel.app>
 
-完整的需求提示詞、AI 編碼調用、修正、測試與部署紀錄，請參閱 [`docs/BUILD_JOURNAL.md`](docs/BUILD_JOURNAL.md)。這份文件會隨專案持續更新，並作為口頭報告與成果發表的素材來源。
+完整的需求提示詞、AI 編碼調用、修正、測試與部署紀錄，請參閱 [`docs/BUILD_JOURNAL.md`](docs/BUILD_JOURNAL.md)。適合轉成 YouTube 影片、口頭報告與成果發表的故事時間軸、章節與畫面清單，請參閱 [`history.md`](history.md)。兩份文件都會隨專案持續更新。
 
 ## 完成功能
 
+- 競賽展示：首頁入口、3–5 分鐘八段導覽、安全 Demo 引擎、三種情境、AI 安全流程、評測證據、一鍵重設與單檔離線備援
 - AI 判讀實驗室：六組離線案例、敏感資料遮罩、進度提示、伺服器端分析與求助卡
 - 防詐闖關：六個分支情境、即時回饋、正常通知案例、查證力分數與能力雷達圖
 - 我的學習護照：五題前測、五題後測、進步幅度、常忽略概念、匿名本機紀錄與班級成果提交
 - 教師專區：30 天匿名班級代碼、學生／家長／長者情境包、Redis 即時彙總與 CSV 匯出
 - 匿名加入：學生不需帳號或姓名，透過班級代碼加入並主動提交固定學習成果欄位
 - 防詐知識庫：14 種詐騙、四階段流程、Images 2.0 海報，以及每日檢查的 165 官方闢謠開放資料
-- 隱私與 AI 說明：資料流、AI 限制、prompt injection 防護與 165 求助方式
+- 隱私與 AI 說明：六階段資料流、Prompt Engineering、Structured Outputs、AI 限制、Prompt Injection 防護與 165 求助方式
+
+## 決賽展示
+
+- 線上展示：`/showcase`
+- 單檔離線備援：`/guardai-offline-demo.html`
+- 建議時間：八個階段合計約 4.5 分鐘
+- 展示模式固定標示「安全 Demo 引擎」，不會被誤認為即時生成式 AI
+- 頁面載入後切斷網路仍能完成；下載的 HTML 可直接以 `file://` 開啟，不依賴 API、外部字型或圖片
+- 程式／規則測試與即時 AI 評測分開呈現；Billing／額度未可用前，即時 AI 顯示「待完成」
 
 ## 技術與隱私
 
@@ -61,11 +71,14 @@ npm run dev
 
 ```bash
 npm run lint
+npm run typecheck
 npm test
 npm run build
 ```
 
-`npm test` 目前執行 50 項測試：40 個反詐／正常／Prompt Injection 情境，以及模式切換、敏感資料遮罩、匿名班級 Schema／彙總與官方 CSV 解析測試。已設定有效 API 額度時，可用 `npm run test:live` 評估生成式 AI 結構與安全建議；測試不會保存訊息。
+`npm test` 目前執行 53 項測試：40 個反詐／正常／Prompt Injection 情境，以及模式切換、敏感資料遮罩、匿名班級 Schema／彙總、官方 CSV、競賽展示流程與評測狀態測試。已設定有效 API 額度時，可用 `npm run test:live` 評估生成式 AI 結構與安全建議；測試不會保存訊息。
+
+完整瀏覽器驗收與截圖索引請參閱 [`docs/test-report.md`](docs/test-report.md) 與 [`docs/screenshots/`](docs/screenshots/)。
 
 ## 部署到 Vercel
 
@@ -75,7 +88,7 @@ npm run build
 2. 在 Vercel 匯入儲存庫，Framework Preset 選 Next.js。
 3. 若使用現場 AI，於 Project Settings → Environment Variables 設定 `GUARDAI_AI_MODE=live`、`OPENAI_API_KEY` 與 `OPENAI_MODEL`。
 4. 若只需穩定參賽展示，不設定任何環境變數即可直接部署 Mock Demo。
-5. 部署後依序測試 `/analyze`、`/challenge`、`/join`、`/passport`、`/teacher`、`/knowledge`、`/privacy` 與相關 API。
+5. 部署後依序測試 `/showcase`、`/guardai-offline-demo.html`、`/analyze`、`/challenge`、`/join`、`/passport`、`/teacher`、`/knowledge`、`/privacy` 與相關 API。
 
 ## 圖像來源
 

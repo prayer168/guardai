@@ -224,6 +224,24 @@ export function TeacherDashboard() {
         <Check aria-hidden="true" />
         <div><strong>教師看到的是匿名學習趨勢，不是學生標籤</strong><p>伺服器只保存班級代碼、情境包、不可逆裝置雜湊與分數彙總所需欄位，30 天後自動刪除。</p></div>
       </section>
+
+      <section className="section-card" aria-labelledby="pilot-evidence-title">
+        <div className="section-title-row">
+          <div><p className="eyebrow">真實試用證據</p><h2 id="pilot-evidence-title" className="section-title">尚未有可公開的真實試用資料</h2></div>
+          <span className="metric-pill">狀態：待蒐集</span>
+        </div>
+        <p className="mt-4 max-w-3xl leading-7 text-ink-muted">上方「Demo 模擬資料」只用來展示教師介面，不代表真實學生人數或學習成效。完成合乎同意與匿名原則的試用後，才會在這裡加入摘要。</p>
+        <dl className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {[
+            ["匿名樣本數", "待完成"],
+            ["試用日期", "待完成"],
+            ["使用情境", "待完成"],
+            ["前後測摘要", "待完成"],
+            ["研究限制", "待完成"],
+          ].map(([term, value]) => <div key={term} className="rounded-xl bg-ivory-deep/55 p-4"><dt className="text-sm font-black text-navy">{term}</dt><dd className="mt-2 text-sm font-bold text-ink-muted">{value}</dd></div>)}
+        </dl>
+        <p className="mt-5 text-sm font-bold leading-7 text-coral-dark">不會新增姓名、座號、Email、電話、個別自由回答或原始可疑訊息欄位。</p>
+      </section>
     </div>
   );
 }

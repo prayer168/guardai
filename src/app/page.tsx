@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, BookOpenCheck, HandHeart, MessageCircleQuestion, MousePointerClick, SearchCheck, Users } from "lucide-react";
+import { ArrowRight, BadgeCheck, BookOpenCheck, HandHeart, MessageCircleQuestion, MousePointerClick, PlayCircle, SearchCheck, Users } from "lucide-react";
 
 import { verificationSteps } from "@/lib/content";
 
@@ -27,6 +27,9 @@ export default function HomePage() {
               <Link href="/analyze" className="button button-gold button-large">貼上可疑訊息 <ArrowRight aria-hidden="true" /></Link>
               <Link href="/challenge" className="button button-ghost-light button-large">先練一題</Link>
             </div>
+            <Link href="/showcase" className="mt-4 inline-flex min-h-12 items-center gap-2 rounded-xl border border-gold/40 bg-navy/75 px-4 py-3 font-black text-gold underline-offset-4 hover:bg-navy focus-visible:underline">
+              <PlayCircle aria-hidden="true" size={20} />進入 3–5 分鐘競賽展示
+            </Link>
             <p className="mt-6 text-sm font-semibold text-ivory/60">不需註冊｜不永久儲存貼入訊息｜不自動開啟陌生網址</p>
           </div>
         </div>
