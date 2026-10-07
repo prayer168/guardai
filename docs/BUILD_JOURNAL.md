@@ -722,5 +722,6 @@ npm run dev
 - 將 53／53 自動測試、16 個 Production 路由、40／40 合成規則案例與真人成效待完成分開呈現；未宣稱即時 AI 40 題準確率。
 - Artifact tool 驗證：16 張、13.3333 × 7.5 英吋、package integrity 0 findings、layout 0 findings、first-party re-import 通過。
 - 輸出：`GuardAI_2026TAIA_決賽優化版_16張_20261006_v5.pptx`。
+- 為方便公開檢視，最終簡報副本存入 `docs/competition/` 並隨 GitHub main 一同發布。
 - 驗收截圖：`docs/screenshots/2026-10-finalist-presentation/`。
 - 未改動網站程式或正式部署；真人前後測與 OpenAI Billing 恢復後的即時模型評測仍待完成。

@@ -10,6 +10,8 @@ GuardAI 是為 2026 TAIA AI 創意設計大賽教育科技領域製作的響應�
 
 完整的需求提示詞、AI 編碼調用、修正、測試與部署紀錄，請參閱 [`docs/BUILD_JOURNAL.md`](docs/BUILD_JOURNAL.md)。適合轉成 YouTube 影片、口頭報告與成果發表的故事時間軸、章節與畫面清單，請參閱 [`history.md`](history.md)。兩份文件都會隨專案持續更新。
 
+競賽入圍後優化的 16 張簡報可從 [`docs/competition/`](docs/competition/) 下載；原版與決賽版視覺比對截圖位於 [`docs/screenshots/2026-10-finalist-presentation/`](docs/screenshots/2026-10-finalist-presentation/)。
+
 ## 完成功能
 
 - 競賽展示：首頁入口、3–5 分鐘八段導覽、安全 Demo 引擎、三種情境、AI 安全流程、評測證據、一鍵重設與單檔離線備援
