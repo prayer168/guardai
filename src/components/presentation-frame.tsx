@@ -1,9 +1,10 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, Expand, Home, Phone, Shrink } from "lucide-react";
+import { ArrowLeft, ArrowRight, Home, Phone } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { FullscreenToggle } from "@/components/fullscreen-toggle";
 
 type PresentationFrameProps = {
   title: string;
@@ -99,10 +100,7 @@ export function PresentationFrame({ title, subtitle, pageNumber, pageCount, page
         </div>
         <div className="knowledge-top-actions">
           {actions}
-          <button type="button" className="knowledge-icon-button" onClick={() => void togglePresentation()} aria-label={immersive ? "結束全螢幕展示" : "全螢幕展示"}>
-            {immersive ? <Shrink aria-hidden="true" size={19} /> : <Expand aria-hidden="true" size={19} />}
-            <span>{immersive ? "結束" : "全螢幕"}</span>
-          </button>
+          <FullscreenToggle active={immersive} onToggle={() => void togglePresentation()} />
           <Link href="/" className="knowledge-home-button" onClick={(event) => { event.preventDefault(); void leaveForHome(); }} aria-label="回到主畫面">
             <Home aria-hidden="true" size={18} /><span>首頁</span>
           </Link>

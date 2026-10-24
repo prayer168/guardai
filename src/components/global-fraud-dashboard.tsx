@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -10,8 +10,9 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { AlertTriangle, ArrowDown, ArrowUp, Expand, ExternalLink, Globe2, Search, ShieldAlert } from "lucide-react";
+import { AlertTriangle, ArrowDown, ArrowUp, ExternalLink, Globe2, Search, ShieldAlert } from "lucide-react";
 import { CountryTrend, FraudGlobe, GlobalTopCountries } from "@/components/global-fraud-views";
+import { FullscreenToggle } from "@/components/fullscreen-toggle";
 
 type HistoryRow = {
   year: number;
@@ -96,6 +97,7 @@ function observation(country: Country, year: number, metric: Metric) {
 }
 
 export function GlobalFraudDashboard({ data }: Props) {
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const years = useMemo(() => {
     const found = new Set<number>();
     data.countries.forEach((country) => country.history.forEach((row) => found.add(row.year)));
@@ -112,6 +114,24 @@ export function GlobalFraudDashboard({ data }: Props) {
   const [filtersOpen, setFiltersOpen] = useState(false);
   const pageSize = countryView === "table" ? 4 : 6;
   const selectedMetric = METRICS.find((item) => item.key === metric)!;
+
+  useEffect(() => {
+    const syncFullscreenState = () => setIsFullscreen(Boolean(document.fullscreenElement));
+    document.addEventListener("fullscreenchange", syncFullscreenState);
+    return () => document.removeEventListener("fullscreenchange", syncFullscreenState);
+  }, []);
+
+  async function toggleFullscreen() {
+    try {
+      if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      } else {
+        await document.documentElement.requestFullscreen();
+      }
+    } catch {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    }
+  }
 
   const countries = useMemo(() => {
     const term = query.trim().toLocaleLowerCase();
@@ -145,7 +165,10 @@ export function GlobalFraudDashboard({ data }: Props) {
             <p className="flex items-center gap-2 text-xs font-bold tracking-wide text-gold sm:text-sm"><Globe2 size={16} aria-hidden="true" /> UNODC 官方統計・{data.metadata.firstYear}–{data.metadata.lastYear}</p>
             <h1 className="mt-1 truncate text-xl font-black sm:text-2xl">全球詐騙資料觀測站</h1>
           </div>
-          <p className="hidden shrink-0 text-right text-sm font-semibold text-ivory/75 sm:block">最新年度 {data.metadata.latestYear}<br />{data.metadata.latestYearCountries} 國／地區有案件數</p>
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <p className="hidden text-right text-sm font-semibold text-ivory/75 sm:block">最新年度 {data.metadata.latestYear}<br />{data.metadata.latestYearCountries} 國／地區有案件數</p>
+            <FullscreenToggle active={isFullscreen} onToggle={() => void toggleFullscreen()} />
+          </div>
         </div>
       </header>
 
@@ -161,7 +184,6 @@ export function GlobalFraudDashboard({ data }: Props) {
         </nav>
 
         <div id="dashboard-panel" role="tabpanel" aria-labelledby={`${panel}-tab`} className="global-fraud-panel mt-3 min-h-0 flex-1 overflow-y-auto rounded-2xl">
-          <div className="mb-2 flex justify-end"><button type="button" onClick={() => { void document.documentElement.requestFullscreen?.(); }} className="inline-flex min-h-9 items-center gap-2 rounded-full border border-navy/20 bg-white px-3 text-sm font-bold text-navy hover:bg-ivory"><Expand size={16} aria-hidden="true" />全螢幕檢視</button></div>
           {panel === "top20" && <GlobalTopCountries countries={data.countries} onTrend={(iso) => { setPanel("trend"); setTrendCountry(iso); }} />}
           {panel === "trend" && <CountryTrend countries={data.countries} initialCountry={trendCountry} />}
           {panel === "globe" && <FraudGlobe countries={data.countries} initialCountry={trendCountry} />}
