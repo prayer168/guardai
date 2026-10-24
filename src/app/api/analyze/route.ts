@@ -24,7 +24,8 @@ export async function POST(request: Request) {
     );
   }
 
-  const { masked, sensitiveDataDetected } = maskSensitiveData(parsed.data.message);
+  const { masked, sensitiveDataDetected: foundSensitiveData } = maskSensitiveData(parsed.data.message);
+  const sensitiveDataDetected = foundSensitiveData || parsed.data.sensitiveDataDetected === true;
   const config = getAiRuntimeConfig();
   let mode: "live" | "mock" = "mock";
   let notice = "目前使用離線 Demo 分析；所有示範流程仍可完整操作。";

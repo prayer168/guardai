@@ -95,4 +95,5 @@ export const analysisJsonSchema = {
 
 export const inputSchema = z.object({
   message: z.string().trim().min(8, "請至少輸入 8 個字").max(5000, "訊息不能超過 5,000 字"),
+  sensitiveDataDetected: z.boolean().optional(),
 });

@@ -2,7 +2,6 @@ import "server-only";
 
 import { parseOfficialRumorCsv } from "@/lib/official-rumors";
 
-export const officialRumorDatasetUrl = "https://data.gov.tw/dataset/38262";
 export const officialRumorCsvUrl = "https://opdadm.moi.gov.tw/api/v1/no-auth/resource/api/dataset/4F4DF9A5-DF4C-4EE8-A50D-869347D38D9E/resource/93E0A77F-47FD-4873-A024-61D6DEFD4FBD/download";
 
 export async function getOfficialRumors(limit = 6) {

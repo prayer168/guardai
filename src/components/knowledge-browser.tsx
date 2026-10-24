@@ -1,205 +1,245 @@
 "use client";
 
-import {
-  ArrowRight,
-  BookOpenCheck,
-  CircleAlert,
-  Download,
-  ExternalLink,
-  Search,
-  ShieldCheck,
-  ShieldQuestion,
-  Sparkles,
-} from "lucide-react";
+import { CheckCircle2, ExternalLink, Newspaper, ShieldAlert, ShieldCheck, X } from "lucide-react";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { PresentationFrame } from "@/components/presentation-frame";
 import { knowledgeItems } from "@/lib/knowledge";
+import { officialRumorDatasetUrl, type OfficialRumorItem } from "@/lib/official-rumors";
 
-const groups = ["全部", ...Array.from(new Set(knowledgeItems.map((item) => item.group)))] as const;
+const groups = ["全部", ...Array.from(new Set(knowledgeItems.map((item) => item.group)))];
+const panels = ["認識主題", "詐騙流程", "可能影響", "立即處置"] as const;
+type PanelIndex = 0 | 1 | 2 | 3;
 
-export function KnowledgeBrowser() {
-  const [group, setGroup] = useState<(typeof groups)[number]>("全部");
+export function KnowledgeBrowser({ officialRumors }: { officialRumors: OfficialRumorItem[] }) {
+  const dialogCloseRef = useRef<HTMLButtonElement>(null);
+  const [group, setGroup] = useState("全部");
   const [query, setQuery] = useState("");
+  const [topicIndex, setTopicIndex] = useState(0);
+  const [panelIndex, setPanelIndex] = useState<PanelIndex>(0);
+  const [rumorsOpen, setRumorsOpen] = useState(false);
+  const [rumorIndex, setRumorIndex] = useState(0);
 
   const visibleItems = useMemo(() => {
-    const normalized = query.trim().toLowerCase();
+    const normalized = query.trim().toLocaleLowerCase("zh-Hant");
     return knowledgeItems.filter((item) => {
-      const groupMatch = group === "全部" || item.group === group;
-      const searchable = [
-        item.category,
-        item.title,
-        item.tagline,
-        item.summary,
-        item.cue,
-        item.verify,
-        ...item.flow.flatMap((step) => [step.title, step.description]),
-        ...item.outcomes,
-        ...item.actions,
-      ]
-        .join(" ")
-        .toLowerCase();
-      return groupMatch && (!normalized || searchable.includes(normalized));
+      const groupMatches = group === "全部" || item.group === group;
+      const searchable = [item.category, item.title, item.tagline, item.summary, item.cue, item.verify, ...item.flow.flatMap((step) => [step.title, step.description]), ...item.outcomes, ...item.actions].join(" ").toLocaleLowerCase("zh-Hant");
+      const searchMatches = !normalized || searchable.includes(normalized);
+      return groupMatches && searchMatches;
     });
   }, [group, query]);
 
+  const currentIndex = Math.min(topicIndex, Math.max(visibleItems.length - 1, 0));
+  const item = visibleItems[currentIndex];
+  const currentRumor = officialRumors[Math.min(rumorIndex, Math.max(officialRumors.length - 1, 0))];
+  const pageNumber = visibleItems.length ? currentIndex * panels.length + panelIndex + 1 : 0;
+  const pageCount = visibleItems.length * panels.length;
+
+  const goNext = useCallback(() => {
+    if (panelIndex < panels.length - 1) {
+      setPanelIndex((value) => (value + 1) as PanelIndex);
+      return;
+    }
+    setTopicIndex((value) => (value + 1) % Math.max(visibleItems.length, 1));
+    setPanelIndex(0);
+  }, [panelIndex, visibleItems.length]);
+
+  const goPrevious = useCallback(() => {
+    if (panelIndex > 0) {
+      setPanelIndex((value) => (value - 1) as PanelIndex);
+      return;
+    }
+    setTopicIndex((value) => (value - 1 + Math.max(visibleItems.length, 1)) % Math.max(visibleItems.length, 1));
+    setPanelIndex(3);
+  }, [panelIndex, visibleItems.length]);
+
+  const changeGroup = (value: string) => {
+    setGroup(value);
+    setTopicIndex(0);
+    setPanelIndex(0);
+  };
+
+  const changeQuery = (value: string) => {
+    setQuery(value);
+    setTopicIndex(0);
+    setPanelIndex(0);
+  };
+
+  useEffect(() => {
+    if (!rumorsOpen) return;
+    dialogCloseRef.current?.focus();
+  }, [rumorsOpen]);
+
+  useEffect(() => {
+    if (!rumorsOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setRumorsOpen(false);
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+        event.preventDefault();
+        setRumorIndex((value) => (value + 1) % Math.max(officialRumors.length, 1));
+      }
+      if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+        event.preventDefault();
+        setRumorIndex((value) => (value - 1 + Math.max(officialRumors.length, 1)) % Math.max(officialRumors.length, 1));
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [officialRumors.length, rumorsOpen]);
+
   return (
-    <div className="space-y-8">
-      <section className="research-banner" aria-labelledby="research-title">
-        <div className="research-icon"><Sparkles aria-hidden="true" /></div>
-        <div>
-          <p className="eyebrow">Deep research｜2026-07-18 完成查核</p>
-          <h2 id="research-title" className="mt-2 text-2xl font-black text-navy">14 種詐騙 × 56 個流程節點 × 官方來源</h2>
-          <p className="mt-2 leading-7 text-ink-muted">每一類都用「接觸、取信、施壓、收割」拆解，並列出可能結果、立即處置與三個查證問題。海報主視覺由 OpenAI Images 2.0 生成，文字內容則由官方資料人工查核後呈現。</p>
-        </div>
+    <PresentationFrame title="防詐簡報" subtitle="把可疑情境拆成看得懂的步驟" pageNumber={pageNumber} pageCount={pageCount} pageLabel={item ? `${item.category}　·　第 ${panelIndex + 1} 張` : "請重新搜尋"} onPrevious={goPrevious} onNext={goNext} actions={(
+      <button type="button" className="knowledge-icon-button knowledge-rumor-button" onClick={() => setRumorsOpen(true)} aria-label="查看 165 官方最新闢謠">
+        <Newspaper aria-hidden="true" size={18} /><span>165 闢謠</span>
+      </button>
+    )}>
+      <div className="presentation-body-inner">
+      <section className="knowledge-selector" aria-label="選擇知識主題">
+        <label>
+          <span>分類</span>
+          <select value={group} onChange={(event) => changeGroup(event.target.value)} aria-label="篩選知識分類">
+            {groups.map((option) => <option key={option} value={option}>{option}</option>)}
+          </select>
+        </label>
+        <label className="knowledge-search-label">
+          <span>搜尋主題</span>
+          <input type="search" value={query} onChange={(event) => changeQuery(event.target.value)} placeholder="輸入關鍵字" aria-label="搜尋防詐主題" />
+        </label>
+        <label className="knowledge-topic-label">
+          <span>主題</span>
+          <select
+            value={item?.id ?? ""}
+            onChange={(event) => {
+              setTopicIndex(visibleItems.findIndex((candidate) => candidate.id === event.target.value));
+              setPanelIndex(0);
+            }}
+            aria-label="選擇防詐主題"
+          >
+            {visibleItems.map((option) => <option key={option.id} value={option.id}>{option.category}｜{option.title}</option>)}
+            {!visibleItems.length ? <option value="">沒有相符主題</option> : null}
+          </select>
+        </label>
       </section>
 
-      <section className="section-card">
-        <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
-          <label className="relative block">
-            <span className="sr-only">搜尋詐騙方式、流程或因應方法</span>
-            <Search aria-hidden="true" className="absolute left-4 top-1/2 -translate-y-1/2 text-ink-muted" size={20} />
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              className="text-input pl-12"
-              placeholder="搜尋詐騙方式、流程或因應方法"
-            />
-          </label>
-          <div className="flex flex-wrap gap-2" role="group" aria-label="知識分類">
-            {groups.map((item) => (
-              <button
-                key={item}
-                type="button"
-                aria-pressed={group === item}
-                className={`filter-chip ${group === item ? "filter-chip-active" : ""}`}
-                onClick={() => setGroup(item)}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
+      <section className="knowledge-deck" aria-label="簡報頁面">
+        <div className="knowledge-deck-heading">
+          <p className="knowledge-page-kicker" aria-live="polite">{item ? `${item.group}　/　${item.category}` : "搜尋結果"}</p>
         </div>
-        <p className="mt-4 text-sm font-bold text-ink-muted" aria-live="polite">目前顯示 {visibleItems.length} 種詐騙方式</p>
-      </section>
 
-      <div className="grid gap-7 xl:grid-cols-2">
-        {visibleItems.map((item, index) => (
-          <article key={item.id} className="deep-knowledge-card">
-            <figure className="knowledge-poster">
-              <Image
-                src={item.poster}
-                alt={item.posterAlt}
-                fill
-                sizes="(max-width: 1279px) 100vw, 50vw"
-                className="object-cover"
-                loading={index === 0 ? "eager" : "lazy"}
-              />
-              <figcaption className="knowledge-poster-caption">
-                <span className="poster-kicker">{item.category}</span>
-                <h2>{item.title}</h2>
-                <p>{item.tagline}</p>
-              </figcaption>
-            </figure>
+        <nav className="knowledge-panel-tabs" aria-label="目前主題的簡報頁">
+          {panels.map((panel, index) => (
+            <button key={panel} type="button" aria-current={panelIndex === index ? "step" : undefined} className={panelIndex === index ? "knowledge-panel-tab is-current" : "knowledge-panel-tab"} onClick={() => setPanelIndex(index as PanelIndex)}>
+              <span>{index + 1}</span>{panel}
+            </button>
+          ))}
+        </nav>
 
-            <div className="p-5 sm:p-7">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <span className="rounded-full bg-gold/15 px-3 py-1 text-sm font-black text-gold-dark">{item.group}</span>
-                <span className="text-xs font-semibold text-ink-muted">查核 {item.reviewed}</span>
-              </div>
-              <p className="mt-4 text-lg font-bold leading-8 text-navy">{item.summary}</p>
-
-              <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                <div className="knowledge-callout knowledge-callout-risk">
-                  <CircleAlert aria-hidden="true" />
-                  <div><h3>先看這些線索</h3><p>{item.cue}</p></div>
+        {item ? (
+          <article key={`${item.id}-${panelIndex}`} className={`knowledge-slide knowledge-slide-${panelIndex}`} aria-live="polite" aria-atomic="true">
+            {panelIndex === 0 ? (
+              <>
+                <div className="knowledge-overview">
+                  <figure className="knowledge-slide-poster">
+                    <Image src={item.poster} alt={item.posterAlt} fill sizes="(max-width: 640px) 28vw, 20vw" className="object-contain" priority={currentIndex < 2} />
+                  </figure>
+                  <div className="knowledge-overview-copy">
+                    <span className="knowledge-category-tag">{item.category}</span>
+                    <h1>{item.title}</h1>
+                    <p>{item.summary}</p>
+                    <p className="knowledge-tagline">{item.tagline}</p>
+                  </div>
+                  <div className="knowledge-clues">
+                    <section className="knowledge-clue knowledge-clue-warning">
+                      <ShieldAlert aria-hidden="true" size={20} />
+                      <div><h2>先辨認危險線索</h2><p>{item.cue}</p></div>
+                    </section>
+                    <section className="knowledge-clue knowledge-clue-safe">
+                      <ShieldCheck aria-hidden="true" size={20} />
+                      <div><h2>安全查證方式</h2><p>{item.verify}</p></div>
+                    </section>
+                  </div>
                 </div>
-                <div className="knowledge-callout knowledge-callout-safe">
-                  <ShieldCheck aria-hidden="true" />
-                  <div><h3>改用這種查法</h3><p>{item.verify}</p></div>
-                </div>
-              </div>
+                <p className="knowledge-reviewed">資料查核日期：{item.reviewed}　·　海報內容以文字說明為準</p>
+              </>
+            ) : null}
 
-              <section className="mt-6" aria-labelledby={`${item.id}-flow`}>
-                <div className="flex items-center gap-2">
-                  <BookOpenCheck aria-hidden="true" className="text-gold-dark" size={21} />
-                  <h3 id={`${item.id}-flow`} className="text-lg font-black text-navy">詐騙流程怎麼走？</h3>
-                </div>
-                <ol className="scam-flow mt-4">
+            {panelIndex === 1 ? (
+              <div className="knowledge-flow-panel">
+                <div className="knowledge-slide-title"><span>02 / 話術拆解</span><h1>{item.title}：詐騙流程怎麼走？</h1><p>留意每一步如何逐漸取得信任，再把你推向不安全的行動。</p></div>
+                <ol className="knowledge-flow-steps">
                   {item.flow.map((step, index) => (
                     <li key={`${item.id}-${step.stage}`}>
-                      <span className="flow-number">{index + 1}</span>
-                      <div>
-                        <span className="flow-stage">{step.stage}</span>
-                        <strong>{step.title}</strong>
-                        <p>{step.description}</p>
-                      </div>
-                      {index < item.flow.length - 1 ? <ArrowRight aria-hidden="true" className="flow-arrow" /> : null}
+                      <span className="knowledge-flow-number">{index + 1}</span>
+                      <span className="knowledge-flow-stage">{step.stage}</span>
+                      <h2>{step.title}</h2>
+                      <p>{step.description}</p>
                     </li>
                   ))}
                 </ol>
-              </section>
+              </div>
+            ) : null}
 
-              <details className="knowledge-details mt-6">
-                <summary>展開可能結果、因應步驟與查證問題</summary>
-                <div className="knowledge-detail-grid">
-                  <section className="impact-panel">
-                    <h3>可能造成的結果</h3>
+            {panelIndex === 2 ? (
+              <div className="knowledge-impact-panel">
+                <div className="knowledge-slide-title"><span>03 / 停下來想一想</span><h1>可能發生什麼？先問自己三個問題。</h1><p>碰到催促或要求保密時，先暫停，再找可信任的人一起查證。</p></div>
+                <div className="knowledge-impact-grid">
+                  <section className="knowledge-impact-box">
+                    <h2><ShieldAlert aria-hidden="true" size={19} />可能造成的影響</h2>
                     <ul>{item.outcomes.map((outcome) => <li key={outcome}>{outcome}</li>)}</ul>
                   </section>
-                  <section className="action-panel">
-                    <h3>現在應該怎麼做</h3>
-                    <ol>{item.actions.map((action, index) => <li key={action}><span>{index + 1}</span>{action}</li>)}</ol>
-                  </section>
-                  <section className="question-panel">
-                    <h3>先問這三個查證問題</h3>
+                  <section className="knowledge-impact-box knowledge-questions-box">
+                    <h2><CheckCircle2 aria-hidden="true" size={19} />查證前問自己</h2>
                     <ol>{item.verificationQuestions.map((question, index) => <li key={question}><span>{index + 1}</span>{question}</li>)}</ol>
                   </section>
-                  <section className="source-panel">
-                    <h3>官方資料來源</h3>
-                    <ul>
-                      {item.sources.map((source) => (
-                        <li key={source.url}>
-                          <a href={source.url} target="_blank" rel="noreferrer">
-                            <span>{source.name}</span>
-                            <small>{source.publisher}</small>
-                            <ExternalLink aria-hidden="true" size={15} />
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
                 </div>
-              </details>
-
-              <div className="mt-5 flex flex-wrap gap-3">
-                <a className="button button-outline knowledge-button" href={item.poster} download>
-                  <Download aria-hidden="true" size={17} />下載海報主視覺
-                </a>
-                <a className="button button-primary knowledge-button" href={item.sources[0].url} target="_blank" rel="noreferrer">
-                  <ExternalLink aria-hidden="true" size={17} />查閱主要官方來源
-                </a>
               </div>
-            </div>
-          </article>
-        ))}
-      </div>
+            ) : null}
 
-      {!visibleItems.length ? (
-        <div className="section-card text-center">
-          <ShieldQuestion aria-hidden="true" className="mx-auto text-gold" size={42} />
-          <h2 className="mt-3 text-xl font-black text-navy">找不到相符內容</h2>
-          <p className="mt-2 text-ink-muted">換一個關鍵字或切回「全部」。</p>
+            {panelIndex === 3 ? (
+              <div className="knowledge-action-panel">
+                <div className="knowledge-slide-title"><span>04 / 保護自己</span><h1>現在可以採取的行動</h1><p>已經提供資料或匯款？先聯絡銀行並撥打 165 諮詢。</p></div>
+                <ol className="knowledge-action-steps">
+                  {item.actions.map((action, index) => <li key={action}><span>{index + 1}</span><p>{action}</p></li>)}
+                </ol>
+                <section className="knowledge-sources" aria-label="官方資料來源">
+                  <span>官方資料來源</span>
+                  {item.sources.map((source) => <a key={source.url} href={source.url} target="_blank" rel="noreferrer" aria-label={`${source.name}，${source.publisher}`} title={`${source.name}｜${source.publisher}`}><span>{source.name}<small>{source.publisher}</small></span><ExternalLink aria-hidden="true" size={13} /></a>)}
+                </section>
+                <p className="knowledge-disclaimer">此為防詐教育資訊；若有即時財損，請聯絡金融機構並撥打 165 或 110。</p>
+              </div>
+            ) : null}
+          </article>
+        ) : (
+          <div className="knowledge-empty"><ShieldAlert aria-hidden="true" size={38} /><h1>找不到相符主題</h1><p>試試別的關鍵字，或切回「全部」分類。</p><button type="button" className="knowledge-secondary-button" onClick={() => { changeQuery(""); changeGroup("全部"); }}>顯示全部主題</button></div>
+        )}
+      </section>
+
+      {rumorsOpen ? (
+        <div className="knowledge-rumor-overlay" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setRumorsOpen(false); }}>
+          <section className="knowledge-rumor-dialog" role="dialog" aria-modal="true" aria-labelledby="knowledge-rumor-title">
+            <header>
+              <div><p className="knowledge-page-kicker">165 官方開放資料串接</p><h2 id="knowledge-rumor-title">最新可取得的詐騙闢謠</h2></div>
+              <button ref={dialogCloseRef} type="button" className="knowledge-close-button" onClick={() => setRumorsOpen(false)} aria-label="關閉官方闢謠"><X aria-hidden="true" /></button>
+            </header>
+            {currentRumor ? (
+              <article className="knowledge-rumor-card" aria-live="polite">
+                <div className="knowledge-rumor-meta"><span>官方編號 {currentRumor.id}</span><time dateTime={currentRumor.publishedAt}>{currentRumor.publishedAt.slice(0, 10).replaceAll("-", "/")}</time></div>
+                <h3>{currentRumor.title}</h3>
+                <p>{currentRumor.excerpt}</p>
+              </article>
+            ) : (
+              <div className="knowledge-rumor-unavailable"><ShieldCheck aria-hidden="true" /><p>官方資料暫時無法讀取，人工查核的知識卡仍可正常使用。</p></div>
+            )}
+            <footer>
+              {currentRumor ? <div className="knowledge-rumor-pagination"><button type="button" className="knowledge-secondary-button" onClick={() => setRumorIndex((value) => (value - 1 + officialRumors.length) % officialRumors.length)} disabled={officialRumors.length < 2}>上一則</button><span aria-live="polite">{rumorIndex + 1} / {officialRumors.length}</span><button type="button" className="knowledge-secondary-button" onClick={() => setRumorIndex((value) => (value + 1) % officialRumors.length)} disabled={officialRumors.length < 2}>下一則</button></div> : <span>每日檢查更新</span>}
+              <a href={officialRumorDatasetUrl} target="_blank" rel="noreferrer">查看政府資料集 <ExternalLink aria-hidden="true" size={14} /></a>
+            </footer>
+          </section>
         </div>
       ) : null}
-
-      <section className="notice notice-info">
-        <ExternalLink aria-hidden="true" />
-        <div>
-          <strong>官方來源會持續更新</strong>
-          <p>14 類教學卡由警政署、刑事警察局、勞動部、地方檢察署與行政院消保會資料整理；頁面上方與 <code>/api/knowledge/official</code> 每日檢查 165 詐騙闢謠官方開放資料，來源不可用時不會用未驗證內容取代。</p>
-        </div>
-      </section>
-    </div>
+      </div>
+    </PresentationFrame>
   );
 }

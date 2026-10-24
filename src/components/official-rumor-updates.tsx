@@ -1,7 +1,6 @@
 import { ExternalLink, RefreshCw, ShieldCheck } from "lucide-react";
 
-import type { OfficialRumorItem } from "@/lib/official-rumors";
-import { officialRumorDatasetUrl } from "@/lib/official-rumors-source";
+import { officialRumorDatasetUrl, type OfficialRumorItem } from "@/lib/official-rumors";
 
 export function OfficialRumorUpdates({ items }: { items: OfficialRumorItem[] }) {
   return (

@@ -1,4 +1,5 @@
-import { getOfficialRumors, officialRumorDatasetUrl } from "@/lib/official-rumors-source";
+import { officialRumorDatasetUrl } from "@/lib/official-rumors";
+import { getOfficialRumors } from "@/lib/official-rumors-source";
 
 export const revalidate = 86400;
 

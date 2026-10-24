@@ -5,6 +5,8 @@ export type OfficialRumorItem = {
   excerpt: string;
 };
 
+export const officialRumorDatasetUrl = "https://data.gov.tw/dataset/38262";
+
 export function parseCsvRows(csv: string) {
   const rows: string[][] = [];
   let row: string[] = [];

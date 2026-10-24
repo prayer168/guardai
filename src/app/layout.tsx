@@ -3,6 +3,7 @@ import { Noto_Sans_TC } from "next/font/google";
 
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { PresentationShell } from "@/components/presentation-shell";
 
 import "./globals.css";
 
@@ -31,9 +32,11 @@ export default function RootLayout({
   return (
     <html lang="zh-Hant" className={`${notoSansTc.variable} h-full antialiased`}>
       <body className="app-shell flex h-dvh flex-col overflow-hidden">
-        <SiteHeader />
-        <main id="main-content" className="app-main min-h-0 flex-1">{children}</main>
-        <SiteFooter />
+        <PresentationShell>
+          <SiteHeader />
+          <main id="main-content" className="app-main min-h-0 flex-1">{children}</main>
+          <SiteFooter />
+        </PresentationShell>
       </body>
     </html>
   );

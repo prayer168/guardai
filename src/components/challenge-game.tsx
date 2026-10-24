@@ -39,7 +39,7 @@ export function ChallengeGame() {
   function next() {
     setSelected(null);
     setIndex((value) => value + 1);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    document.getElementById("main-content")?.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function restart() {
@@ -77,6 +77,7 @@ export function ChallengeGame() {
   const isCorrect = selected === scenario.correctOption;
 
   return (
+    <>
     <section className="section-card challenge-card p-0">
       <div className="challenge-card-header border-b border-navy/10 bg-ivory-deep/45 px-5 py-4 md:px-8">
         <div className="flex items-center justify-between gap-3 text-sm font-bold text-ink-muted">
@@ -122,20 +123,26 @@ export function ChallengeGame() {
           </div>
         </fieldset>
 
-        {selected ? (
-          <div className={`mt-6 rounded-2xl p-5 ${isCorrect ? "bg-sage/12 text-sage-dark" : "bg-coral/10 text-coral-dark"}`} aria-live="polite">
-            <div className="flex items-center gap-2 text-lg font-black">
-              {isCorrect ? <CheckCircle2 aria-hidden="true" /> : <XCircle aria-hidden="true" />}
-              {isCorrect ? "這一步很安全" : "先停一下，再想一次"}
-            </div>
-            <p className="mt-2 leading-7">{scenario.explanation}</p>
-            <button type="button" className="button button-primary mt-5" onClick={next}>
-              {index === challengeScenarios.length - 1 ? "查看學習成果" : "下一個情境"}
-              <ArrowRight aria-hidden="true" size={18} />
-            </button>
-          </div>
-        ) : null}
       </div>
     </section>
+    {selected ? (
+      <div className="challenge-feedback-backdrop">
+        <section className={`challenge-feedback-dialog ${isCorrect ? "challenge-feedback-correct" : "challenge-feedback-review"}`} role="dialog" aria-modal="true" aria-labelledby="challenge-feedback-title" aria-describedby="challenge-feedback-explanation">
+          <div className="challenge-feedback-icon">
+            {isCorrect ? <CheckCircle2 aria-hidden="true" size={27} /> : <XCircle aria-hidden="true" size={27} />}
+          </div>
+          <div>
+            <p className="challenge-feedback-eyebrow">情境 {index + 1} / {challengeScenarios.length}｜解題解析</p>
+            <h2 id="challenge-feedback-title">{isCorrect ? "這一步很安全" : "先停一下，再想一次"}</h2>
+            <p id="challenge-feedback-explanation">{scenario.explanation}</p>
+          </div>
+          <button type="button" className="button button-primary challenge-feedback-next" autoFocus onClick={next}>
+            {index === challengeScenarios.length - 1 ? "查看學習成果" : "下一個情境"}
+            <ArrowRight aria-hidden="true" size={18} />
+          </button>
+        </section>
+      </div>
+    ) : null}
+    </>
   );
 }

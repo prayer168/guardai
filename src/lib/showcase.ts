@@ -67,7 +67,9 @@ export const showcaseSteps = [
   { id: "actions", short: "查", title: "排列安全行動", seconds: 30 },
   { id: "help", short: "求", title: "把問題交給可信任的人", seconds: 25 },
   { id: "learning", short: "成效", title: "看見學習證據", seconds: 45 },
+  { id: "scenarios", short: "情境", title: "三種角色的實際應用", seconds: 45 },
   { id: "safety", short: "技術", title: "公開 AI 安全與評測證據", seconds: 60 },
+  { id: "evaluation", short: "評測", title: "呈現已完成與待完成的評測", seconds: 35 },
 ] as const;
 
 export type ShowcaseStepId = (typeof showcaseSteps)[number]["id"];
