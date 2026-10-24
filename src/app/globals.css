@@ -878,6 +878,36 @@ code {
 .challenge-card-body fieldset { margin-top: 0.9rem; }
 .challenge-card-body fieldset > div { margin-top: 0.5rem; gap: 0.5rem; }
 .challenge-option { min-height: 3rem; padding: 0.5rem 0.75rem; }
+.challenge-results-card { display: flex; flex-direction: column; gap: 0.75rem; padding: clamp(0.85rem, 1.8vw, 1.35rem); }
+.challenge-results-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-bottom: 1px solid rgb(16 38 61 / 0.1); padding-bottom: 0.7rem; }
+.challenge-results-score { display: flex; min-width: 0; align-items: center; gap: 0.7rem; }
+.challenge-results-icon { display: grid; width: 3.25rem; height: 3.25rem; flex: 0 0 auto; place-items: center; border-radius: 50%; background: #edf4ec; color: #3f6848; }
+.challenge-results-score .eyebrow { margin: 0; font-size: 0.68rem; letter-spacing: 0.1em; }
+.challenge-results-score h2 { margin: 0.12rem 0; color: #10263d; font-size: clamp(1.35rem, 2.2vw, 1.8rem); font-weight: 950; line-height: 1.2; }
+.challenge-results-score > div > p:last-child { margin: 0; color: #58656c; font-size: 0.85rem; line-height: 1.4; }
+.challenge-results-actions { display: flex; flex: 0 0 auto; flex-wrap: wrap; justify-content: flex-end; gap: 0.4rem; }
+.challenge-results-actions .button { min-height: 2.45rem; padding: 0.45rem 0.72rem; font-size: 0.77rem; }
+.challenge-results-details { display: grid; min-height: 0; grid-template-columns: minmax(12rem, 0.72fr) minmax(0, 1.5fr); align-items: stretch; gap: 0.7rem; }
+.challenge-results-radar,.challenge-results-review { min-width: 0; border: 1px solid rgb(16 38 61 / 0.1); border-radius: 0.9rem; padding: 0.7rem 0.85rem; }
+.challenge-results-radar { display: flex; flex-direction: column; justify-content: center; background: #fbf7ef; }
+.challenge-results-radar h3,.challenge-results-review h3 { margin: 0; color: #10263d; font-size: 0.95rem; font-weight: 900; }
+.challenge-results-radar .h-72 { height: 12rem; }
+.challenge-results-review { display: flex; min-height: 0; flex-direction: column; justify-content: center; gap: 0.55rem; background: white; }
+.challenge-results-review-heading { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.challenge-results-review-heading .eyebrow { margin: 0 0 0.12rem; font-size: 0.62rem; }
+.challenge-results-review-heading > span { border-radius: 999px; background: #f7f0e2; padding: 0.28rem 0.55rem; color: #755521; font-size: 0.75rem; font-weight: 900; }
+.challenge-results-review-item { display: grid; gap: 0.28rem; color: #42576b; font-size: 0.88rem; line-height: 1.5; }
+.challenge-results-review-item h4 { margin: 0 0 0.1rem; color: #10263d; font-size: 1.02rem; font-weight: 900; }
+.challenge-results-review-item p { margin: 0; }
+.challenge-results-review-item p strong { color: #10263d; }
+.challenge-results-review-item p:first-of-type strong { color: #9e312f; }
+.challenge-results-explanation { margin-top: 0.12rem !important; border-left: 3px solid #c4a15f; padding-left: 0.55rem; color: #58656c; }
+.challenge-results-review-controls { display: flex; justify-content: space-between; gap: 0.5rem; }
+.challenge-results-review-controls .button { min-height: 2.1rem; padding: 0.35rem 0.6rem; font-size: 0.75rem; }
+.challenge-results-review-controls .button:disabled { cursor: not-allowed; opacity: 0.45; }
+.challenge-results-perfect { display: flex; align-items: flex-start; gap: 0.5rem; border-radius: 0.7rem; background: #edf4ec; padding: 0.75rem; color: #3f6848; }
+.challenge-results-perfect svg { flex: 0 0 auto; }
+.challenge-results-perfect p { margin: 0; color: #3d5944; font-size: 0.9rem; line-height: 1.55; }
 
 .showcase-experience { display: grid; gap: 0.5rem; }
 .showcase-overview h2 { margin-top: 0.35rem; font-size: 1.45rem; }
@@ -937,6 +967,25 @@ code {
   .challenge-feedback-icon svg { width: 22px; height: 22px; }
   .challenge-feedback-eyebrow { font-size: 0.64rem; }
   .challenge-feedback-next { width: 100%; grid-column: 1 / -1; margin-top: 0.1rem; }
+  .challenge-results-card { gap: 0.55rem; padding: 0.7rem; }
+  .challenge-results-heading { align-items: flex-start; flex-direction: column; gap: 0.55rem; padding-bottom: 0.55rem; }
+  .challenge-results-icon { width: 2.65rem; height: 2.65rem; }
+  .challenge-results-icon svg { width: 24px; height: 24px; }
+  .challenge-results-score h2 { font-size: 1.3rem; }
+  .challenge-results-score > div > p:last-child { font-size: 0.76rem; }
+  .challenge-results-actions { display: grid; width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.35rem; }
+  .challenge-results-actions .button { min-height: 2.2rem; padding: 0.35rem 0.45rem; font-size: 0.7rem; }
+  .challenge-results-actions .button-primary { grid-column: 1 / -1; }
+  .challenge-results-details { grid-template-columns: minmax(0, 1fr); gap: 0.4rem; }
+  .challenge-results-radar,.challenge-results-review { padding: 0.55rem 0.65rem; }
+  .challenge-results-radar h3,.challenge-results-review h3 { font-size: 0.84rem; }
+  .challenge-results-radar .h-72 { height: 8.5rem; }
+  .challenge-results-review { gap: 0.4rem; }
+  .challenge-results-review-item { gap: 0.2rem; font-size: 0.78rem; line-height: 1.4; }
+  .challenge-results-review-item h4 { font-size: 0.9rem; }
+  .challenge-results-review-heading > span { padding: 0.2rem 0.42rem; font-size: 0.68rem; }
+  .challenge-results-review-controls .button { min-height: 1.95rem; font-size: 0.7rem; }
+  .challenge-results-perfect p { font-size: 0.78rem; }
 }
 
 @media (min-width: 768px) {
@@ -1005,43 +1054,59 @@ code {
 .presentation-stage .presentation-progress-meta { grid-template-columns: minmax(6rem, auto) minmax(5rem, 1fr); }
 .presentation-stage .presentation-body-inner { width: min(100%, 90rem); }
 .privacy-presentation-body { display: flex; width: min(100%, 90rem); min-width: 0; min-height: 0; flex: 1 1 auto; flex-direction: column; align-self: center; overflow: hidden; padding: clamp(0.55rem, 2vh, 1.1rem) clamp(0.7rem, 2vw, 1.4rem); }
-.privacy-slide-kicker { flex: 0 0 auto; color: #755521; font-size: clamp(0.62rem, 1.1vw, 0.75rem); font-weight: 900; letter-spacing: 0.11em; }
 .privacy-slide-grid { display: flex; min-width: 0; min-height: 0; flex: 1 1 auto; flex-direction: column; justify-content: center; overflow: hidden; gap: clamp(0.45rem, 1.25vh, 0.8rem); }
-.privacy-slide-title { flex: 0 0 auto; color: #10263d; font-size: clamp(1.15rem, 2.6vw, 2rem); font-weight: 950; line-height: 1.18; text-wrap: balance; }
-.privacy-principle-grid { display: grid; min-height: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(0.4rem, 1.2vw, 0.8rem); }
-.privacy-principle-card { display: grid; min-width: 0; align-content: center; grid-template-columns: auto minmax(0, 1fr); column-gap: 0.65rem; border: 1px solid rgb(16 38 61 / 0.1); border-radius: 1rem; background: #fff; padding: clamp(0.65rem, 1.6vw, 1.2rem); }
-.privacy-principle-card > span { display: grid; width: 2.2rem; height: 2.2rem; grid-row: span 2; place-items: center; border-radius: 50%; background: #f7f0e2; color: #755521; }
-.privacy-principle-card > span svg { width: 19px; }
-.privacy-principle-card h2,.privacy-security-card h2,.privacy-boundary-grid h2 { min-width: 0; color: #10263d; font-size: clamp(0.88rem, 1.55vw, 1.2rem); font-weight: 950; line-height: 1.25; }
-.privacy-principle-card p,.privacy-security-card li,.privacy-boundary-grid p,.privacy-class-card > p:not(.privacy-mini-kicker),.privacy-help-card > div > p:last-child { min-width: 0; margin-top: 0.3rem; color: #58656c; font-size: clamp(0.72rem, 1.12vw, 0.88rem); font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
-.privacy-flow-grid { display: grid; min-width: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.45rem; }
-.privacy-flow-grid li { display: grid; min-width: 0; grid-template-columns: 1.55rem minmax(0, 1fr); gap: 0.45rem; align-content: center; border-radius: 0.75rem; background: #fff; padding: clamp(0.45rem, 1.1vw, 0.8rem); }
-.privacy-flow-grid li > span { display: grid; width: 1.45rem; height: 1.45rem; place-items: center; border-radius: 50%; background: #10263d; color: #f0d49a; font-size: 0.75rem; font-weight: 900; }
-.privacy-flow-grid strong { color: #10263d; font-size: 0.82rem; font-weight: 900; }
-.privacy-flow-grid p { margin-top: 0.18rem; color: #58656c; font-size: clamp(0.66rem, 0.98vw, 0.78rem); line-height: 1.4; }
-.privacy-note,.privacy-security-note { border-radius: 0.7rem; background: #f7f0e2; padding: 0.55rem 0.7rem; color: #58656c; font-size: clamp(0.63rem, 0.95vw, 0.76rem); font-weight: 650; line-height: 1.45; overflow-wrap: anywhere; }
-.privacy-security-grid { display: grid; min-width: 0; min-height: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.7rem; }
-.privacy-security-card { display: flex; min-width: 0; min-height: 0; flex-direction: column; border: 1px solid rgb(16 38 61 / 0.1); border-radius: 0.9rem; background: #fff; padding: clamp(0.65rem, 1.5vw, 1rem); }
-.privacy-security-card > svg { width: 1.3rem; height: 1.3rem; color: #755521; }
-.privacy-mini-kicker { margin-top: 0.25rem; color: #755521; font-size: 0.63rem; font-weight: 900; letter-spacing: 0.08em; }
-.privacy-security-card h2 { margin-top: 0.18rem; }
-.privacy-security-card ul { display: grid; gap: 0.2rem; margin-top: 0.4rem; padding-left: 1rem; list-style: disc; }
-.privacy-security-card li { margin: 0; font-size: clamp(0.66rem, 0.95vw, 0.77rem); line-height: 1.4; }
-.privacy-code { min-width: 0; margin-top: 0.35rem; overflow: hidden; border-radius: 0.55rem; background: #10263d; padding: 0.5rem; color: #fffaf0; font-size: clamp(0.53rem, 0.83vw, 0.68rem); line-height: 1.35; white-space: pre-wrap; overflow-wrap: anywhere; }
-.privacy-code code { background: transparent; padding: 0; }
-.privacy-security-note { margin-top: 0.3rem; padding: 0.35rem 0.45rem; font-size: 0.62rem; }
-.privacy-boundary-grid { display: grid; min-width: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.6rem; }
-.privacy-boundary-grid article { min-width: 0; border-radius: 0.85rem; background: white; padding: clamp(0.65rem, 1.5vw, 1rem); }
-.privacy-boundary-grid svg { width: 1.35rem; height: 1.35rem; color: #755521; }
-.privacy-boundary-grid h2 { margin-top: 0.4rem; }
-.privacy-class-card { width: min(100%, 58rem); align-self: center; border: 1px solid rgb(16 38 61 / 0.1); border-radius: 1rem; background: white; padding: clamp(1rem, 3vw, 2rem); }
+.privacy-slide-title { flex: 0 0 auto; color: #10263d; font-size: clamp(1.35rem, 2.8vw, 2.15rem); font-weight: 950; line-height: 1.18; text-wrap: balance; }
+.privacy-principle-grid { display: grid; min-height: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(0.55rem, 1.35vw, 1rem); }
+.privacy-principle-card { display: grid; min-width: 0; align-content: center; grid-template-columns: auto minmax(0, 1fr); column-gap: 0.75rem; border: 1px solid rgb(16 38 61 / 0.1); border-radius: 1rem; padding: clamp(0.8rem, 1.8vw, 1.35rem); }
+.privacy-tone-sand { background: #f7efdf; }
+.privacy-tone-sage { background: #e8f2e8; }
+.privacy-tone-blue { background: #e8f0f9; }
+.privacy-tone-rose { background: #fae9e6; }
+.privacy-principle-card > span { display: grid; width: 2.65rem; height: 2.65rem; grid-row: span 2; place-items: center; border-radius: 50%; background: rgb(255 255 255 / 0.72); color: #755521; }
+.privacy-principle-card > span svg { width: 22px; height: 22px; }
+.privacy-principle-card h2,.privacy-security-card h2,.privacy-boundary-grid h2 { min-width: 0; color: #10263d; font-size: clamp(1.05rem, 1.75vw, 1.32rem); font-weight: 950; line-height: 1.25; }
+.privacy-principle-card p,.privacy-security-card p,.privacy-boundary-grid p,.privacy-class-points p,.privacy-help-card > div > p:last-child { min-width: 0; margin-top: 0.35rem; color: #465966; font-size: clamp(0.9rem, 1.18vw, 1rem); font-weight: 600; line-height: 1.55; overflow-wrap: anywhere; }
+.privacy-flow-grid { display: grid; min-width: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(0.45rem, 1vw, 0.75rem); }
+.privacy-flow-grid li { display: grid; min-width: 0; grid-template-columns: 2rem minmax(0, 1fr); gap: 0.65rem; align-content: center; border: 1px solid rgb(16 38 61 / 0.08); border-radius: 0.9rem; background: #f1f4ef; padding: clamp(0.65rem, 1.3vw, 1rem); }
+.privacy-flow-grid li:nth-child(2) { background: #f7efdf; }
+.privacy-flow-grid li:nth-child(3) { background: #e8f0f9; }
+.privacy-flow-grid li:nth-child(4) { background: #e8f2e8; }
+.privacy-flow-grid li > span { display: grid; width: 1.9rem; height: 1.9rem; place-items: center; border-radius: 50%; background: #10263d; color: #f0d49a; font-size: 0.9rem; font-weight: 900; }
+.privacy-flow-grid strong { color: #10263d; font-size: clamp(1rem, 1.35vw, 1.15rem); font-weight: 900; }
+.privacy-flow-grid p { margin-top: 0.25rem; color: #465966; font-size: clamp(0.86rem, 1.12vw, 0.96rem); line-height: 1.45; }
+.privacy-note { display: flex; align-items: flex-start; gap: 0.55rem; border-radius: 0.8rem; background: #f7f0e2; padding: 0.75rem 0.9rem; color: #344b5a; font-size: clamp(0.88rem, 1.12vw, 0.98rem); font-weight: 700; line-height: 1.5; overflow-wrap: anywhere; }
+.privacy-note-emphasis { border-left: 5px solid #c99b4f; }
+.privacy-note-alert { border: 1px solid #e9b5ae; background: #fff0ed; color: #9c302b; }
+.privacy-note-alert svg { width: 1.35rem; height: 1.35rem; flex: 0 0 auto; }
+.privacy-security-grid { display: grid; min-width: 0; min-height: 0; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(0.5rem, 1.1vw, 0.8rem); }
+.privacy-security-card { display: grid; min-width: 0; min-height: 0; grid-template-columns: auto minmax(0, 1fr); align-items: center; gap: 0.7rem; border: 1px solid rgb(16 38 61 / 0.1); border-radius: 0.9rem; background: #fff; padding: clamp(0.7rem, 1.5vw, 1.1rem); }
+.privacy-security-card:nth-child(1) { background: #fae9e6; }
+.privacy-security-card:nth-child(2) { background: #f7efdf; }
+.privacy-security-card:nth-child(3) { background: #e8f2e8; }
+.privacy-security-card:nth-child(4) { background: #e8f0f9; }
+.privacy-rule-number { display: grid; width: 2.7rem; height: 2.7rem; place-items: center; border-radius: 50%; background: rgb(255 255 255 / 0.78); color: #755521; font-size: 1rem; font-weight: 950; }
+.privacy-security-card h2 { margin: 0; }
+.privacy-mini-kicker { margin-top: 0.25rem; color: #755521; font-size: 0.8rem; font-weight: 900; letter-spacing: 0.05em; }
+.privacy-boundary-grid { display: grid; min-width: 0; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(0.55rem, 1vw, 0.8rem); }
+.privacy-boundary-grid article { min-width: 0; border-radius: 0.9rem; background: #e8f2e8; padding: clamp(0.8rem, 1.6vw, 1.2rem); }
+.privacy-boundary-grid article:nth-child(2) { background: #fae9e6; }
+.privacy-boundary-grid article:nth-child(3) { background: #e8f0f9; }
+.privacy-boundary-grid svg { width: 1.65rem; height: 1.65rem; color: #755521; }
+.privacy-boundary-grid h2 { margin-top: 0.45rem; }
+.privacy-class-card { width: min(100%, 66rem); align-self: center; border: 1px solid rgb(16 38 61 / 0.1); border-radius: 1rem; background: #fff; padding: clamp(1rem, 2.5vw, 1.8rem); }
 .privacy-class-card .privacy-slide-title { margin-top: 0.25rem; }
-.privacy-class-card > p:not(.privacy-mini-kicker) { font-size: clamp(0.82rem, 1.5vw, 1.05rem); line-height: 1.75; }
-.privacy-class-card > strong { display: block; margin-top: 0.7rem; color: #365f40; font-size: clamp(0.78rem, 1.25vw, 0.94rem); line-height: 1.55; }
+.privacy-class-points { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.65rem; margin-top: 0.8rem; }
+.privacy-class-points article { display: grid; grid-template-columns: auto 1fr; align-content: center; align-items: center; gap: 0.25rem 0.55rem; border-radius: 0.8rem; background: #f1f4ef; padding: 0.7rem 0.85rem; }
+.privacy-class-points article:nth-child(2) { background: #e8f0f9; }
+.privacy-class-points article:nth-child(3) { background: #f7efdf; }
+.privacy-class-points article:nth-child(4) { background: #e8f2e8; }
+.privacy-class-points svg { width: 1.4rem; height: 1.4rem; grid-row: span 2; color: #755521; }
+.privacy-class-points strong { color: #10263d; font-size: clamp(0.95rem, 1.3vw, 1.1rem); font-weight: 900; }
+.privacy-class-points p { margin: 0; font-size: clamp(0.82rem, 1.05vw, 0.92rem); }
 .privacy-help-card { display: grid; min-width: 0; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 1rem; border-radius: 1rem; background: #10263d; padding: clamp(0.8rem, 2vw, 1.5rem); color: #fffaf0; }
 .privacy-help-card > span { display: grid; width: 2.8rem; height: 2.8rem; place-items: center; border-radius: 50%; background: rgb(240 212 154 / 0.15); color: #f0d49a; }
-.privacy-help-card h1 { color: #fffaf0; font-size: clamp(1.05rem, 2.4vw, 1.75rem); font-weight: 950; line-height: 1.25; }
-.privacy-help-card > div > p:last-child { color: rgb(255 250 240 / 0.78); }
+.privacy-help-card h1 { color: #fffaf0; font-size: clamp(1.35rem, 2.7vw, 2rem); font-weight: 950; line-height: 1.25; }
+.privacy-help-card > div > p:last-child { color: rgb(255 250 240 / 0.86); }
 .privacy-help-card .button { width: auto; white-space: nowrap; }
 
 .showcase-presentation-body { display: flex; width: min(100%, 90rem); min-width: 0; min-height: 0; flex: 1 1 auto; flex-direction: column; align-self: center; gap: 0.45rem; overflow: hidden; padding: clamp(0.35rem, 1vh, 0.65rem) clamp(0.65rem, 2vw, 1.4rem); }
@@ -1640,42 +1705,40 @@ code {
   .analyzer-confirm-actions { gap: 0.3rem; }
   .analyzer-confirm-actions button { min-height: 2.1rem; padding: 0.3rem 0.55rem; font-size: 0.62rem; }
   .privacy-presentation-body { padding: 0.35rem 0.55rem; }
-  .privacy-principle-grid { gap: 0.3rem; }
-  .privacy-principle-card { grid-template-columns: auto minmax(0, 1fr); column-gap: 0.35rem; border-radius: 0.7rem; padding: 0.45rem; }
-  .privacy-principle-card > span { width: 1.65rem; height: 1.65rem; }
-  .privacy-principle-card > span svg { width: 15px; }
-  .privacy-principle-card h2 { font-size: 0.73rem; }
-  .privacy-principle-card p { margin-top: 0.15rem; font-size: 0.63rem; line-height: 1.35; }
-  .privacy-slide-title { font-size: clamp(0.95rem, 4.2vw, 1.3rem); }
-  .privacy-flow-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.3rem; }
-  .privacy-flow-grid li { grid-template-columns: 1.15rem minmax(0, 1fr); gap: 0.28rem; padding: 0.35rem; }
-  .privacy-flow-grid li > span { width: 1.08rem; height: 1.08rem; font-size: 0.6rem; }
-  .privacy-flow-grid strong { font-size: 0.68rem; }
-  .privacy-flow-grid p { font-size: 0.59rem; line-height: 1.3; }
-  .privacy-note,.privacy-security-note { padding: 0.38rem; font-size: 0.56rem; line-height: 1.32; }
-  .privacy-security-grid { gap: 0.35rem; }
-  .privacy-security-card { border-radius: 0.65rem; padding: 0.42rem; }
-  .privacy-security-card > svg { width: 1rem; height: 1rem; }
-  .privacy-mini-kicker { font-size: 0.52rem; }
-  .privacy-security-card h2 { font-size: 0.68rem; }
-  .privacy-security-card ul { gap: 0.12rem; margin-top: 0.25rem; padding-left: 0.75rem; }
-  .privacy-security-card li { font-size: 0.57rem; line-height: 1.3; }
-  .privacy-code { padding: 0.32rem; font-size: 0.48rem; }
-  .privacy-security-note { margin-top: 0.2rem; padding: 0.25rem; font-size: 0.52rem; }
-  .privacy-boundary-grid { gap: 0.3rem; }
-  .privacy-boundary-grid article { border-radius: 0.6rem; padding: 0.42rem; }
-  .privacy-boundary-grid svg { width: 1rem; height: 1rem; }
-  .privacy-boundary-grid h2 { margin-top: 0.2rem; font-size: 0.68rem; }
-  .privacy-boundary-grid p { margin-top: 0.15rem; font-size: 0.57rem; line-height: 1.3; }
-  .privacy-class-card { padding: 0.8rem; }
-  .privacy-class-card > p:not(.privacy-mini-kicker) { font-size: 0.78rem; line-height: 1.55; }
-  .privacy-class-card > strong { font-size: 0.72rem; }
-  .privacy-help-card { grid-template-columns: auto minmax(0, 1fr); gap: 0.55rem; padding: 0.65rem; }
-  .privacy-help-card > span { width: 2rem; height: 2rem; }
-  .privacy-help-card > span svg { width: 17px; }
-  .privacy-help-card h1 { font-size: 0.95rem; }
-  .privacy-help-card > div > p:last-child { font-size: 0.66rem; line-height: 1.4; }
-  .privacy-help-card .button { width: 100%; min-height: 2.2rem; grid-column: 1 / -1; }
+  .privacy-slide-grid { gap: 0.55rem; }
+  .privacy-slide-title { font-size: clamp(1.08rem, 4.8vw, 1.45rem); }
+  .privacy-principle-grid,.privacy-security-grid { gap: 0.45rem; }
+  .privacy-principle-card { column-gap: 0.45rem; border-radius: 0.75rem; padding: 0.6rem; }
+  .privacy-principle-card > span { width: 1.9rem; height: 1.9rem; }
+  .privacy-principle-card > span svg { width: 17px; height: 17px; }
+  .privacy-principle-card h2,.privacy-security-card h2,.privacy-boundary-grid h2 { font-size: clamp(0.88rem, 3.7vw, 1rem); }
+  .privacy-principle-card p,.privacy-security-card p,.privacy-boundary-grid p,.privacy-class-points p,.privacy-help-card > div > p:last-child { margin-top: 0.22rem; font-size: clamp(0.73rem, 3.15vw, 0.84rem); line-height: 1.4; }
+  .privacy-flow-grid { gap: 0.4rem; }
+  .privacy-flow-grid li { grid-template-columns: 1.45rem minmax(0, 1fr); gap: 0.4rem; border-radius: 0.7rem; padding: 0.5rem; }
+  .privacy-flow-grid li > span { width: 1.35rem; height: 1.35rem; font-size: 0.72rem; }
+  .privacy-flow-grid strong { font-size: clamp(0.82rem, 3.4vw, 0.94rem); }
+  .privacy-flow-grid p { margin-top: 0.15rem; font-size: clamp(0.7rem, 2.9vw, 0.8rem); line-height: 1.35; }
+  .privacy-note { gap: 0.35rem; border-radius: 0.65rem; padding: 0.5rem 0.55rem; font-size: clamp(0.72rem, 3vw, 0.82rem); line-height: 1.4; }
+  .privacy-note-alert svg { width: 1.1rem; height: 1.1rem; }
+  .privacy-security-card { gap: 0.4rem; border-radius: 0.7rem; padding: 0.55rem; }
+  .privacy-rule-number { width: 1.8rem; height: 1.8rem; font-size: 0.75rem; }
+  .privacy-mini-kicker { font-size: 0.7rem; }
+  .privacy-boundary-grid { grid-template-columns: minmax(0, 1fr); gap: 0.4rem; }
+  .privacy-boundary-grid article { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.1rem 0.55rem; align-items: center; border-radius: 0.7rem; padding: 0.55rem 0.65rem; }
+  .privacy-boundary-grid svg { width: 1.25rem; height: 1.25rem; grid-row: span 2; }
+  .privacy-boundary-grid h2 { margin-top: 0; }
+  .privacy-boundary-grid p { margin: 0; }
+  .privacy-class-card { padding: 0.75rem; }
+  .privacy-class-points { gap: 0.4rem; margin-top: 0.5rem; }
+  .privacy-class-points article { gap: 0.15rem 0.35rem; border-radius: 0.65rem; padding: 0.5rem; }
+  .privacy-class-points svg { width: 1.1rem; height: 1.1rem; }
+  .privacy-class-points strong { font-size: 0.84rem; }
+  .privacy-class-points p { font-size: clamp(0.68rem, 2.7vw, 0.76rem); }
+  .privacy-help-card { grid-template-columns: auto minmax(0, 1fr); gap: 0.55rem; padding: 0.75rem; }
+  .privacy-help-card > span { width: 2.25rem; height: 2.25rem; }
+  .privacy-help-card > span svg { width: 19px; }
+  .privacy-help-card h1 { font-size: clamp(1.05rem, 4.4vw, 1.3rem); }
+  .privacy-help-card .button { width: 100%; min-height: 2.35rem; grid-column: 1 / -1; }
   .showcase-presentation-body { gap: 0.3rem; padding: 0.25rem 0.45rem; }
   .showcase-step-nav { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.18rem; }
   .showcase-step-nav button { min-height: 1.7rem; gap: 0.12rem; border-radius: 0.45rem; padding: 0.15rem; font-size: 0.58rem; }
@@ -1896,3 +1959,112 @@ code {
   .assessment-results-panels { flex-basis: 9rem; }
   .assessment-results-panel { padding-block: 0.45rem; }
 }
+
+/* Shared readable scale across the GuardAI experience. */
+.home-copy .text-xs,.home-method .text-xs,.site-container > .text-xs { font-size: 13px; }
+.site-header .text-xs,.site-footer .text-xs { font-size: 13px; }
+.site-page > section .eyebrow { font-size: 13px; }
+.site-page > section p.text-xs { font-size: 14px; }
+.presentation-progress-meta,.knowledge-navigation > p,.knowledge-nav-button,.knowledge-icon-button,.knowledge-home-button { font-size: 13px; }
+
+/* Privacy deck. */
+.privacy-principle-card h2,.privacy-security-card h2,.privacy-boundary-grid h2 { font-size: 17px; }
+.privacy-principle-card p,.privacy-security-card p,.privacy-boundary-grid p,.privacy-class-points p,.privacy-help-card > div > p:last-child { font-size: 15px; }
+.privacy-flow-grid strong { font-size: 16px; }
+.privacy-flow-grid p,.privacy-note { font-size: 14px; }
+.privacy-mini-kicker { font-size: 13px; }
+
+/* AI analysis: make privacy advice, labels and form controls readable on touch screens. */
+.analyzer-privacy-banner strong { font-size: 15px; }
+.analyzer-privacy-banner p { font-size: 14px; }
+.analyzer-message-heading label { font-size: 17px; }
+.analyzer-message-heading span,.analyzer-message-tools,.analyzer-message-tools button { font-size: 13px; }
+.analyzer-input-form textarea { font-size: 16px; }
+.analyzer-picker-heading strong { font-size: 15px; }
+.analyzer-picker-heading small,.analyzer-picker-heading a,.analyzer-picker-controls label > span,.analyzer-source-note,.analyzer-source-note a { font-size: 13px; }
+.analyzer-picker-controls select,.analyzer-picker-controls input { font-size: 14px; }
+.analyzer-confirm-button { font-size: 15px; }
+
+/* Showcase: preserve the single-screen deck while enlarging step labels and teaching copy. */
+.showcase-step-nav button { font-size: 13px; }
+.showcase-stage-heading p,.showcase-stage-heading > span { font-size: 13px; }
+.showcase-stage-heading h1 { font-size: 19px; }
+.showcase-stage-content .eyebrow { font-size: 13px; }
+.showcase-stage-content .signal-card p,.showcase-stage-content .signal-card blockquote,.showcase-stage-content .numbered-item p { font-size: 14px; }
+.showcase-stage-content .button,.showcase-stage-content .message-bubble { font-size: 14px; }
+.showcase-safety-flow h3,.showcase-evaluation-dimensions h3,.showcase-scenario-steps h3 { font-size: 15px; }
+.showcase-safety-flow p,.showcase-evidence-card > div,.showcase-evidence-card > p:not(.showcase-evidence-score),.showcase-evaluation-dimensions > div span,.showcase-evaluation-dimensions > p,.showcase-fixed-disclaimer,.showcase-scenario-tabs button,.showcase-scenario-role p,.showcase-scenario-steps li p,.showcase-scenario-outcomes dt,.showcase-scenario-outcomes dd { font-size: 13px; }
+
+/* Knowledge pages: use the shared navy, ivory and gold style with legible explanation text. */
+.knowledge-selector label,.knowledge-selector label > span,.knowledge-selector select,.knowledge-selector input,.knowledge-panel-tab,.knowledge-navigation > p { font-size: 13px; }
+.knowledge-overview-copy h1 { font-size: 22px; }
+.knowledge-overview-copy > p,.knowledge-overview-copy .knowledge-tagline,.knowledge-clue p,.knowledge-impact-box li,.knowledge-questions-box li,.knowledge-action-steps p { font-size: 14px; }
+.knowledge-page-kicker,.knowledge-category-tag,.knowledge-clue h2,.knowledge-impact-box h2,.knowledge-flow-steps h2 { font-size: 15px; }
+.knowledge-flow-stage,.knowledge-flow-steps p,.knowledge-sources > span,.knowledge-sources a,.knowledge-sources a small,.knowledge-reviewed,.knowledge-disclaimer { font-size: 12px; }
+
+/* Passport and results dashboards. */
+.passport-heading > div:first-child > p:last-child,.passport-assessment-card p,.passport-station-card p,.passport-station-locked p,.passport-consent > p,.passport-consent-status,.passport-metrics .metric-card span,.passport-assessment-card .eyebrow,.passport-station-card .eyebrow,.passport-station-locked .eyebrow { font-size: 14px; }
+.passport-results-link,.passport-topbar-title,.passport-consent label,.passport-assessment-actions .button,.passport-station-card .button { font-size: 13px; }
+.passport-home,.passport-clear-label,.passport-station-number { font-size: 13px; }
+.assessment-results-heading p,.assessment-results-period button,.assessment-results-metrics span,.assessment-results-metrics small,.assessment-results-panel-heading .eyebrow,.assessment-results-panel-heading > span,.assessment-score-row,.assessment-score-row strong,.assessment-results-footnote,.assessment-concept-list h3,.assessment-concept-list > p,.assessment-concept-row,.assessment-results-note p,.assessment-results-empty span { font-size: 13px; }
+.assessment-results-heading .eyebrow { font-size: 12px; }
+
+/* One-screen mobile layouts: keep labels readable and let cards wrap instead of clipping. */
+@media (max-width: 640px) {
+  .privacy-slide-title { font-size: 21px; }
+  .privacy-principle-card h2,.privacy-security-card h2,.privacy-boundary-grid h2 { font-size: 15px; }
+  .privacy-principle-card p,.privacy-security-card p,.privacy-boundary-grid p,.privacy-class-points p,.privacy-help-card > div > p:last-child,.privacy-flow-grid p,.privacy-note { font-size: 14px; }
+  .privacy-mini-kicker { font-size: 12px; }
+  .analyzer-privacy-banner strong { font-size: 14px; }
+  .analyzer-privacy-banner p { font-size: 13px; }
+  .analyzer-message-heading label { font-size: 16px; }
+  .analyzer-message-heading span,.analyzer-message-tools,.analyzer-message-tools button { font-size: 12px; }
+  .analyzer-input-form textarea { font-size: 16px; }
+  .analyzer-picker-heading strong { font-size: 14px; }
+  .analyzer-picker-heading small,.analyzer-picker-heading a,.analyzer-picker-controls label > span,.analyzer-source-note,.analyzer-source-note a { font-size: 12px; }
+  .analyzer-picker-controls select,.analyzer-picker-controls input { font-size: 14px; }
+  .showcase-stage-heading p,.showcase-stage-heading > span,.showcase-stage-content .eyebrow { font-size: 12px; }
+  .showcase-stage-heading h1 { font-size: 18px; }
+  .showcase-stage-content .signal-card p,.showcase-stage-content .signal-card blockquote,.showcase-stage-content .numbered-item p { font-size: 13px; }
+  .showcase-stage-content .button,.showcase-stage-content .message-bubble { font-size: 13px; }
+  .showcase-safety-flow p,.showcase-evidence-card > div,.showcase-evidence-card > p:not(.showcase-evidence-score),.showcase-evaluation-dimensions > div span,.showcase-evaluation-dimensions > p,.showcase-fixed-disclaimer,.showcase-scenario-tabs button,.showcase-scenario-role p,.showcase-scenario-steps li p,.showcase-scenario-outcomes dt,.showcase-scenario-outcomes dd { font-size: 12px; }
+  .showcase-safety-flow h3,.showcase-evaluation-dimensions h3,.showcase-scenario-steps h3 { font-size: 14px; }
+  .showcase-scenario-tabs button { min-height: 2.2rem; }
+  .knowledge-overview-copy h1 { font-size: 19px; }
+  .knowledge-overview-copy > p,.knowledge-overview-copy .knowledge-tagline,.knowledge-clue p,.knowledge-impact-box li,.knowledge-questions-box li,.knowledge-action-steps p { font-size: 13px; }
+  .knowledge-page-kicker,.knowledge-category-tag,.knowledge-clue h2,.knowledge-impact-box h2,.knowledge-flow-steps h2 { font-size: 14px; }
+  .knowledge-flow-stage,.knowledge-flow-steps p { font-size: 13px; }
+  .knowledge-sources > span,.knowledge-sources a,.knowledge-sources a small,.knowledge-reviewed,.knowledge-disclaimer { font-size: 12px; }
+  .knowledge-clue { padding: 0.48rem 0.55rem; }
+  .knowledge-sources a { min-height: 1.9rem; }
+  .passport-heading > div:first-child > p:last-child,.passport-assessment-card p,.passport-station-card p,.passport-station-locked p,.passport-consent > p,.passport-consent-status { font-size: 13px; }
+  .passport-consent label,.passport-assessment-actions .button,.passport-station-card .button,.passport-results-link,.passport-topbar-title { font-size: 12px; }
+  .assessment-results-heading p,.assessment-results-period button,.assessment-results-metrics span,.assessment-results-metrics small,.assessment-results-panel-heading .eyebrow,.assessment-results-panel-heading > span,.assessment-score-row,.assessment-score-row strong,.assessment-results-footnote,.assessment-concept-list h3,.assessment-concept-list > p,.assessment-concept-row,.assessment-results-note p,.assessment-results-empty span { font-size: 12px; }
+  .assessment-results-heading > div:first-child > p:last-child { font-size: 14px; }
+  .assessment-results-heading .eyebrow { font-size: 12px; }
+  .passport-home,.passport-clear-label,.passport-station-number { font-size: 12px; }
+  .knowledge-navigation { grid-template-columns: auto minmax(0, 1fr) auto; }
+  .knowledge-nav-button { white-space: nowrap; }
+}
+
+/* Keep slide section labels and learner guidance readable across knowledge topics. */
+.knowledge-slide-title > span { font-size: 13px; }
+.knowledge-slide-title > p { font-size: 14px; }
+@media (max-width: 640px) { .knowledge-slide-title > span { font-size: 12px; } .knowledge-slide-title > p { font-size: 13px; } }
+
+.knowledge-flow-number,.knowledge-questions-box li > span,.knowledge-action-steps li > span { font-size: 12px; }
+@media (max-width: 640px) { .knowledge-flow-number,.knowledge-questions-box li > span,.knowledge-action-steps li > span { font-size: 12px; } }
+
+/* Shared presentation chrome: readable subtitles and step markers on every deck. */
+.knowledge-brand > div > span { font-size: 13px; }
+.privacy-flow-grid li > span { font-size: 13px; }
+@media (max-width: 640px) { .knowledge-brand > div > span { font-size: 12px; } .privacy-flow-grid li > span { font-size: 12px; } }
+
+.showcase-step-nav button > span,.showcase-scenario-steps li span,.showcase-number-badge { font-size: 12px; }
+@media (max-width: 640px) { .showcase-step-nav button > span,.showcase-scenario-steps li span,.showcase-number-badge { font-size: 12px; } }
+
+.showcase-safety-flow li > span { font-size: 12px; }
+@media (max-width: 640px) { .showcase-safety-flow li > span { font-size: 12px; } }
+
+.knowledge-panel-tab > span { font-size: 12px; }
+@media (max-width: 640px) { .knowledge-panel-tab > span { font-size: 12px; } }

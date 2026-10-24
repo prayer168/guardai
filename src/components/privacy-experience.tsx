@@ -1,11 +1,32 @@
 "use client";
 
-import { Bot, Database, EyeOff, FileJson2, Gauge, LockKeyhole, Phone, ShieldCheck } from "lucide-react";
+import { AlertTriangle, Bot, CheckCircle2, Database, EyeOff, LockKeyhole, Phone, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 
 import { PresentationFrame } from "@/components/presentation-frame";
 
-const slides = ["資料原則", "訊息處理流程", "AI 安全機制", "公開邊界", "班級資料", "真人求助"] as const;
+const slides = ["資料原則", "訊息處理", "AI 安全", "公開界線", "匿名評量", "真人求助"] as const;
+
+const privacyPrinciples = [
+  { icon: EyeOff, title: "先遮罩個資", description: "不要貼姓名、帳號、密碼、信用卡或 OTP。系統會先遮罩常見敏感資料。", tone: "sand" },
+  { icon: Database, title: "訊息不存入資料庫", description: "GuardAI 不會永久保存你貼上的訊息。匿名用量紀錄到期自動刪除。", tone: "sage" },
+  { icon: LockKeyhole, title: "評量分享由你決定", description: "只有你同意，前後測分數與錯誤概念才會匿名統計；最多保留 30 天。", tone: "blue" },
+  { icon: Bot, title: "AI 不是最後裁判", description: "AI 可能判斷錯誤。重要事情請從官方管道查證，或找真人一起確認。", tone: "rose" },
+] as const;
+
+const processSteps = [
+  ["輸入訊息", "只分析文字，不會開啟訊息中的網址。"],
+  ["先遮罩個資", "遮掉常見電話、Email、驗證碼與卡號。"],
+  ["安全分析", "即時 AI 會把遮罩後文字送至 OpenAI；離線 Demo 不會。"],
+  ["提供下一步", "整理風險線索、查證問題與安全行動。"],
+] as const;
+
+const aiSafetyRules = [
+  ["不照訊息指令做", "把訊息當資料分析，不執行其中要求。"],
+  ["不開啟可疑網址", "不點擊、不登入，也不替你操作連結。"],
+  ["不確定就說不確定", "證據不足時，不直接判定真假。"],
+  ["先檢查再顯示", "分析結果通過格式與內容檢查才會呈現。"],
+] as const;
 
 export function PrivacyExperience() {
   const [page, setPage] = useState(0);
@@ -15,95 +36,57 @@ export function PrivacyExperience() {
   return (
     <PresentationFrame title="隱私與 AI" subtitle="資料最小化、可解釋結果與真人求助" pageNumber={page + 1} pageCount={slides.length} pageLabel={slides[page]} onPrevious={previous} onNext={next}>
       <div className="privacy-presentation-body">
-        <p className="privacy-slide-kicker">安全不是附加功能　/　{slides[page]}</p>
-
         {page === 0 ? (
           <section className="privacy-slide-grid" aria-labelledby="privacy-principles-title">
-            <h1 id="privacy-principles-title" className="privacy-slide-title">使用 GuardAI 時，哪些資料會被保護？</h1>
+            <h1 id="privacy-principles-title" className="privacy-slide-title">使用 GuardAI，先記住四件事</h1>
             <div className="privacy-principle-grid">
-              {[
-                [EyeOff, "輸入前先少一點", "不要貼入姓名、身分證、帳號、密碼、信用卡或 OTP。系統會再次遮罩常見敏感格式。"],
-                [Database, "評量統計由你決定", "貼入判讀的訊息不會保存。前後測分數與錯誤概念只有在你自願同意後才會匿名彙總；不收姓名、班級、座號或逐題作答，30 天自動刪除。"],
-                [LockKeyhole, "金鑰留在伺服器", "啟用即時 AI 時，API Key 只存在伺服器環境變數，不會傳到瀏覽器。"],
-                [Bot, "AI 不是最終裁判", "AI 可能誤判、漏判或欠缺最新資訊；結果只用來協助辨認風險與規劃查證。"],
-              ].map(([Icon, title, description]) => {
-                const ItemIcon = Icon as typeof ShieldCheck;
-                return <article key={String(title)} className="privacy-principle-card"><span><ItemIcon aria-hidden="true" /></span><h2>{String(title)}</h2><p>{String(description)}</p></article>;
-              })}
+              {privacyPrinciples.map(({ icon: Icon, title, description, tone }) => <article key={title} className={`privacy-principle-card privacy-tone-${tone}`}><span><Icon aria-hidden="true" /></span><h2>{title}</h2><p>{description}</p></article>)}
             </div>
           </section>
         ) : null}
 
         {page === 1 ? (
           <section className="privacy-slide-grid" aria-labelledby="privacy-flow-title">
-            <h1 id="privacy-flow-title" className="privacy-slide-title">一則訊息如何被處理？</h1>
+            <h1 id="privacy-flow-title" className="privacy-slide-title">你的訊息會經過四個步驟</h1>
             <ol className="privacy-flow-grid">
-              {[
-                ["輸入", "訊息只被視為待分析資料，不執行其中的指令。"],
-                ["敏感資料遮罩", "先移除常見電話、Email、OTP、帳號與卡號格式。"],
-                ["用量限制", "通過每分鐘、每日與匿名訪客配額後才可能呼叫 AI。"],
-                ["OpenAI 或 Mock", "即時服務不可用時，改用清楚標示的安全 Demo 引擎。"],
-                ["Schema／Zod 驗證", "不符合固定 JSON 結構的結果不會直接顯示。"],
-                ["教學回饋", "輸出原文線索、三個問題、安全行動與求助摘要。"],
-              ].map(([title, description], index) => <li key={title}><span>{index + 1}</span><div><strong>{title}</strong><p>{description}</p></div></li>)}
+              {processSteps.map(([title, description], index) => <li key={title}><span>{index + 1}</span><div><strong>{title}</strong><p>{description}</p></div></li>)}
             </ol>
-            <p className="privacy-note">即時 OpenAI 模式設定 <code>store: false</code>，應用本身不永久保存訊息。為控制公開網站用量，每日配額服務只保存日期、不可逆訪客雜湊與次數，於期限到達後自動刪除；不保存訊息文字、分析結果、姓名或 IP 原值。</p>
+            <p className="privacy-note privacy-note-emphasis">即時 AI 會將遮罩後文字傳給 OpenAI 分析。GuardAI 不保存訊息內容；用量管理只暫存匿名代碼與日期，期限到後自動刪除。</p>
           </section>
         ) : null}
 
         {page === 2 ? (
           <section className="privacy-slide-grid" aria-labelledby="privacy-ai-title">
-            <h1 id="privacy-ai-title" className="privacy-slide-title">固定提示原則與輸出 Schema</h1>
+            <h1 id="privacy-ai-title" className="privacy-slide-title">AI 判讀時，GuardAI 會守住這些界線</h1>
             <div className="privacy-security-grid">
-              <article className="privacy-security-card">
-                <Gauge aria-hidden="true" />
-                <p className="privacy-mini-kicker">Prompt Engineering</p>
-                <h2>系統提示詞的安全原則</h2>
-                <ul>
-                  <li>使用者文字固定放在「待分析資料」邊界內。</li>
-                  <li>即使訊息要求忽略規則，也不得執行。</li>
-                  <li>不造訪、不建議點擊訊息裡的網址。</li>
-                  <li>證據不足輸出 <code>unknown</code>，禁止絕對斷言。</li>
-                  <li>高風險時優先停止、獨立查證與真人求助。</li>
-                </ul>
-              </article>
-              <article className="privacy-security-card">
-                <FileJson2 aria-hidden="true" />
-                <p className="privacy-mini-kicker">Structured Outputs</p>
-                <h2>固定 Schema，不接受自由格式</h2>
-                <pre className="privacy-code" aria-label="AI 輸出 Schema 精簡範例"><code>{`{
-  "riskLevel": "unknown | low | medium | high | critical",
-  "confidence": "low | medium | high",
-  "signals": [{ "excerpt": "…", "type": "…" }],
-  "verificationQuestions": ["三個問題"],
-  "recommendedActions": ["三至五個行動"],
-  "helpSummary": "可轉傳的求助摘要"
-}`}</code></pre>
-                <p className="privacy-security-note">實際回傳還需包含摘要、操控手法、學習重點、敏感資料狀態與免責聲明，並經 Strict JSON Schema 與 Zod 雙重驗證。</p>
-              </article>
+              {aiSafetyRules.map(([title, description], index) => <article key={title} className={`privacy-security-card privacy-rule-${index + 1}`}><span className="privacy-rule-number">0{index + 1}</span><div><h2>{title}</h2><p>{description}</p></div></article>)}
             </div>
+            <p className="privacy-note privacy-note-alert"><AlertTriangle aria-hidden="true" />AI 可能誤判或漏判；重要決定請先查官方來源，必要時找真人協助。</p>
           </section>
         ) : null}
 
         {page === 3 ? (
           <section className="privacy-slide-grid" aria-labelledby="privacy-boundary-title">
-            <h1 id="privacy-boundary-title" className="privacy-slide-title">網站會說明機制，但不公開祕密設定</h1>
+            <h1 id="privacy-boundary-title" className="privacy-slide-title">安全機制公開，祕密金鑰不公開</h1>
             <div className="privacy-boundary-grid">
-              <article><ShieldCheck aria-hidden="true" /><h2>可以公開</h2><p>遮罩、限流、Prompt 原則、Schema 欄位、Mock 回退與資料保存原則。</p></article>
-              <article><LockKeyhole aria-hidden="true" /><h2>絕不公開</h2><p>API Key、Redis Token、Salt、完整環境變數值或可還原個人的識別資料。</p></article>
-              <article><Bot aria-hidden="true" /><h2>AI 的限制</h2><p>可能誤判、漏判或欠缺最新資訊；即時模式與 Demo 模式必須清楚標示。</p></article>
+              <article className="privacy-boundary-safe"><ShieldCheck aria-hidden="true" /><h2>可以放心了解</h2><p>哪些資料會被遮罩、訊息如何處理，以及 AI 有哪些限制。</p></article>
+              <article className="privacy-boundary-secret"><LockKeyhole aria-hidden="true" /><h2>絕不放在畫面上</h2><p>API Key、資料庫 Token 和其他可登入服務的祕密金鑰。</p></article>
+              <article className="privacy-boundary-ai"><Bot aria-hidden="true" /><h2>務必記得</h2><p>AI 分析只是提醒，不是警方、銀行或法律的最終認定。</p></article>
             </div>
-            <p className="privacy-note">固定聲明：此為 AI 初步風險分析，不代表警方、金融機構或法律上的最終認定。</p>
           </section>
         ) : null}
 
         {page === 4 ? (
           <section className="privacy-slide-grid privacy-class-slide" aria-labelledby="privacy-class-title">
             <div className="privacy-class-card">
-              <p className="privacy-mini-kicker">匿名評量資料</p>
-              <h1 id="privacy-class-title" className="privacy-slide-title">所有人都能參與，不必提供班級或座號</h1>
-              <p>學生、家長、教師或一般大眾都可不登入完成前後測。只有勾選自願加入後，網站才送出分數與錯誤概念；伺服器以不可逆雜湊識別碼配對同一瀏覽器裝置的前後測，不保存姓名、班級、座號或逐題作答。</p>
-              <strong>匿名評量統計最多保留 30 天，儀表板只顯示至少 5 個匿名識別碼的群體結果；可隨時取消同意並刪除本裝置提交的資料。不同裝置可能重複計入。需要班級分析時，也可另用匿名班級代碼查看彙總。</strong>
+              <p className="privacy-mini-kicker">匿名評量</p>
+              <h1 id="privacy-class-title" className="privacy-slide-title">不必提供身分資料，也能參與</h1>
+              <div className="privacy-class-points">
+                <article><EyeOff aria-hidden="true" /><strong>不需登入</strong><p>不填姓名、班級或座號。</p></article>
+                <article><CheckCircle2 aria-hidden="true" /><strong>自願分享</strong><p>同意後才送出分數與錯誤概念。</p></article>
+                <article><Database aria-hidden="true" /><strong>最多保存 30 天</strong><p>可取消同意並刪除已提交資料。</p></article>
+                <article><ShieldCheck aria-hidden="true" /><strong>只看群體趨勢</strong><p>至少 5 個匿名代碼才顯示統計。</p></article>
+              </div>
             </div>
           </section>
         ) : null}
@@ -112,10 +95,9 @@ export function PrivacyExperience() {
           <section className="privacy-slide-grid" aria-labelledby="privacy-help-title">
             <div className="privacy-help-card">
               <span><Phone aria-hidden="true" /></span>
-              <div><p className="privacy-mini-kicker">真人求助</p><h1 id="privacy-help-title">遇到金錢或人身風險，交給真人處理</h1><p>停止付款、保留紀錄，請可信任成人陪同並撥打 165。緊急危險請聯絡 110。</p></div>
+              <div><p className="privacy-mini-kicker">真人求助</p><h1 id="privacy-help-title">遇到詐騙，先停下來找人幫忙</h1><p>停止付款、保留紀錄，找可信任的人一起處理。反詐騙諮詢請撥 165；有立即危險請撥 110。</p></div>
               <a className="button button-light" href="tel:165">撥打 165</a>
             </div>
-            <p className="privacy-note">固定聲明：此為 AI 初步風險分析，不代表警方、金融機構或法律上的最終認定。</p>
           </section>
         ) : null}
       </div>

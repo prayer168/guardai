@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, RotateCcw, ShieldCheck, XCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, BookOpenCheck, CheckCircle2, RotateCcw, ShieldCheck, XCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { LearningRadar } from "@/components/learning-radar";
@@ -14,6 +14,8 @@ export function ChallengeGame() {
   const [selected, setSelected] = useState<string | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [skillScores, setSkillScores] = useState<Record<SkillKey, number>>(emptyScores);
+  const [chosenAnswers, setChosenAnswers] = useState<Record<string, string>>({});
+  const [reviewIndex, setReviewIndex] = useState(0);
   const complete = index >= challengeScenarios.length;
   const scenario = challengeScenarios[index];
 
@@ -21,13 +23,14 @@ export function ChallengeGame() {
     if (!complete) return;
     window.localStorage.setItem(
       "guardai-challenge",
-      JSON.stringify({ correctCount, total: challengeScenarios.length, skillScores, completedAt: new Date().toISOString() }),
+      JSON.stringify({ correctCount, total: challengeScenarios.length, skillScores, answers: chosenAnswers, completedAt: new Date().toISOString() }),
     );
-  }, [complete, correctCount, skillScores]);
+  }, [complete, correctCount, skillScores, chosenAnswers]);
 
   function choose(optionId: string) {
     if (selected || !scenario) return;
     setSelected(optionId);
+    setChosenAnswers((answers) => ({ ...answers, [scenario.id]: optionId }));
     if (optionId === scenario.correctOption) {
       setCorrectCount((value) => value + 1);
       setSkillScores((scores) => ({ ...scores, [scenario.skill]: Math.min(100, scores[scenario.skill] + 32) }));
@@ -47,28 +50,46 @@ export function ChallengeGame() {
     setSelected(null);
     setCorrectCount(0);
     setSkillScores(emptyScores);
+    setChosenAnswers({});
+    setReviewIndex(0);
+    window.localStorage.removeItem("guardai-challenge");
   }
 
   if (complete) {
     const finalScore = Math.round((correctCount / challengeScenarios.length) * 100);
+    const missedScenarios = challengeScenarios.filter((item) => chosenAnswers[item.id] !== item.correctOption);
+    const reviewScenario = missedScenarios[reviewIndex];
+    const chosenOption = reviewScenario?.options.find((option) => option.id === chosenAnswers[reviewScenario.id]);
     return (
-      <section className="section-card text-center">
-        <span className="mx-auto grid size-20 place-items-center rounded-full bg-sage/15 text-sage-dark">
-          <ShieldCheck aria-hidden="true" size={42} />
-        </span>
-        <p className="eyebrow mt-6">闖關完成</p>
-        <h2 className="mt-2 text-3xl font-black text-navy md:text-4xl">你的查證力：{finalScore} 分</h2>
-        <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-ink-muted">
-          你答對 {correctCount}／{challengeScenarios.length} 題。分數不是標籤，而是提醒你下一次最值得練習哪一步。
-        </p>
-        <div className="mx-auto mt-4 max-w-xl">
-          <LearningRadar scores={skillScores} />
-        </div>
-        <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-          <Link className="button button-primary" href="/passport">查看學習護照 <ArrowRight aria-hidden="true" size={18} /></Link>
-          <button type="button" className="button button-outline" onClick={restart}>
-            <RotateCcw aria-hidden="true" size={18} /> 再練一次
-          </button>
+      <section className="section-card challenge-results-card" aria-labelledby="challenge-results-title">
+        <header className="challenge-results-heading">
+          <div className="challenge-results-score">
+            <span className="challenge-results-icon"><ShieldCheck aria-hidden="true" size={30} /></span>
+            <div><p className="eyebrow">六個情境已完成</p><h2 id="challenge-results-title">查證力 {finalScore} 分</h2><p>答對 {correctCount}／{challengeScenarios.length} 題 · 分數是練習方向，不是能力標籤。</p></div>
+          </div>
+          <div className="challenge-results-actions">
+            <Link className="button button-primary" href="/passport"><BookOpenCheck aria-hidden="true" size={18} />前往後測<ArrowRight aria-hidden="true" size={18} /></Link>
+            <button type="button" className="button button-outline" onClick={restart}><RotateCcw aria-hidden="true" size={18} />再練一次</button>
+            <Link className="button button-secondary" href="/passport">回學習護照</Link>
+          </div>
+        </header>
+        <div className="challenge-results-details">
+          <section className="challenge-results-radar" aria-label="查證策略學習概況"><h3>五項查證策略</h3><LearningRadar scores={skillScores} /></section>
+          <section className="challenge-results-review" aria-live="polite">
+            <div className="challenge-results-review-heading"><div><p className="eyebrow">學習回饋</p><h3>{missedScenarios.length ? `再看一次錯題（${missedScenarios.length} 題）` : "六題全答對"}</h3></div>{missedScenarios.length ? <span>{reviewIndex + 1}／{missedScenarios.length}</span> : null}</div>
+            {reviewScenario ? <>
+              <article className="challenge-results-review-item">
+                <h4>{reviewScenario.title}</h4>
+                <p><strong>你的選擇：</strong>{chosenOption?.label ?? "未作答"}</p>
+                <p><strong>建議做法：</strong>{reviewScenario.options.find((option) => option.id === reviewScenario.correctOption)?.label}</p>
+                <p className="challenge-results-explanation">{reviewScenario.explanation}</p>
+              </article>
+              <div className="challenge-results-review-controls">
+                <button type="button" className="button button-secondary" disabled={reviewIndex === 0} onClick={() => setReviewIndex((value) => value - 1)}><ArrowLeft aria-hidden="true" size={16} />上一題</button>
+                <button type="button" className="button button-secondary" disabled={reviewIndex >= missedScenarios.length - 1} onClick={() => setReviewIndex((value) => value + 1)}>下一題<ArrowRight aria-hidden="true" size={16} /></button>
+              </div>
+            </> : <div className="challenge-results-perfect"><CheckCircle2 aria-hidden="true" /><p>你能在不同情境中選出安全的查證行動。可以前往後測，看看策略是否也能用在新題目裡。</p></div>}
+          </section>
         </div>
       </section>
     );
