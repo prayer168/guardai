@@ -14,6 +14,15 @@ const responseHeaders = {
   "X-Content-Type-Options": "nosniff",
 };
 
+function logStoreFailure(action: string, reason: unknown) {
+  const failure = typeof reason === "object" && reason !== null ? reason as { name?: unknown; status?: unknown } : {};
+  console.error("GUARDAI_ASSESSMENT_STORE_FAILURE", {
+    action,
+    name: typeof failure.name === "string" ? failure.name : "unknown",
+    status: typeof failure.status === "number" ? failure.status : undefined,
+  });
+}
+
 export async function GET(request: Request) {
   const rawDays = new URL(request.url).searchParams.get("days") ?? "30";
   const parsedDays = assessmentDaysSchema.safeParse(rawDays);
@@ -24,7 +33,8 @@ export async function GET(request: Request) {
   try {
     const aggregate = await getAnonymousAssessmentAggregate(parsedDays.data as 7 | 30);
     return Response.json(aggregate, { headers: responseHeaders });
-  } catch {
+  } catch (reason) {
+    logStoreFailure("read", reason);
     return Response.json({ error: "匿名評量統計暫時無法使用。" }, { status: 503, headers: responseHeaders });
   }
 }
@@ -60,7 +70,8 @@ export async function POST(request: Request) {
     };
     await saveAnonymousAssessment(parsed.data.learnerId, parsed.data.kind, stage);
     return Response.json({ saved: true, score: stage.score, kind: parsed.data.kind, retentionDays: 30 }, { status: 201, headers: responseHeaders });
-  } catch {
+  } catch (reason) {
+    logStoreFailure("submit", reason);
     return Response.json({ error: "匿名結果暫時無法儲存，請稍後再試。" }, { status: 503, headers: responseHeaders });
   }
 }
@@ -82,7 +93,8 @@ export async function DELETE(request: Request) {
     }
     await deleteAnonymousAssessment(parsed.data.learnerId);
     return Response.json({ deleted: true }, { headers: responseHeaders });
-  } catch {
+  } catch (reason) {
+    logStoreFailure("withdraw", reason);
     return Response.json({ error: "匿名資料暫時無法刪除，請稍後再試。" }, { status: 503, headers: responseHeaders });
   }
 }
