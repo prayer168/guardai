@@ -10,7 +10,8 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { AlertTriangle, ArrowDown, ArrowUp, ExternalLink, Globe2, Search, ShieldAlert } from "lucide-react";
+import { AlertTriangle, ArrowDown, ArrowUp, Expand, ExternalLink, Globe2, Search, ShieldAlert } from "lucide-react";
+import { CountryTrend, FraudGlobe, GlobalTopCountries } from "@/components/global-fraud-views";
 
 type HistoryRow = {
   year: number;
@@ -73,6 +74,12 @@ const SOURCES = [
   { label: "資料定義與統計方法", href: "https://data.unodc.org/sites/dataportal.unodc.org/files/2026-07/metadata_corruption_and_economic_crime.pdf" },
   { label: "ICCS 國際犯罪分類", href: "https://www.unodc.org/documents/data-and-analysis/statistics/crime/ICCS/ICCS_final-2015-March12_FINAL.pdf" },
   { label: "INTERPOL 詐騙趨勢", href: "https://www.interpol.int/en/News-and-Events/News/2024/INTERPOL-Financial-Fraud-assessment-A-global-threat-boosted-by-technology" },
+  { label: "台灣 106–110 年案件與犯罪率", href: "https://www.npa.gov.tw/ch/app/data/doc?detailNo=1056871011732951040&module=wg031&type=s" },
+  { label: "台灣 109–113 年案件與口徑變更", href: "https://www.npa.gov.tw/ch/app/data/doc?detailNo=1452952881236807680&module=wg031&type=s" },
+  { label: "台灣 114 年案件數與破獲率", href: "https://www.npa.gov.tw/ch/app/data/doc?detailNo=1488707994689474560&module=wg057&type=s" },
+  { label: "台灣 2013–2015 歷史統計", href: "https://www.cib.npa.gov.tw/ch/app/data/doc?detailNo=936181584195751936&module=wg136&type=s" },
+  { label: "台灣最新警政統計表（更新至 2026 年 8 月）", href: "https://www.npa.gov.tw/ch/app/data/doc?detailNo=949193398038827008&module=wg055&type=s" },
+  { label: "3D 地球紋理套件與授權", href: "https://github.com/vasturiano/three-globe" },
 ];
 
 function formatNumber(value: number | null, digits = 0) {
@@ -99,7 +106,8 @@ export function GlobalFraudDashboard({ data }: Props) {
   const [metric, setMetric] = useState<Metric>("fraudCount");
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(0);
-  const [panel, setPanel] = useState<"overview" | "countries" | "types" | "method">("overview");
+  const [panel, setPanel] = useState<"overview" | "countries" | "top20" | "trend" | "globe" | "types" | "method">("overview");
+  const [trendCountry, setTrendCountry] = useState("BRA");
   const [countryView, setCountryView] = useState<"chart" | "table">("chart");
   const [filtersOpen, setFiltersOpen] = useState(false);
   const pageSize = countryView === "table" ? 4 : 6;
@@ -142,14 +150,21 @@ export function GlobalFraudDashboard({ data }: Props) {
       </header>
 
       <main className="site-container flex min-h-0 w-full flex-1 flex-col py-3 sm:py-4">
-        <nav aria-label="儀表板區段" role="tablist" className="flex shrink-0 gap-1 pb-1 sm:gap-2">
+        <nav aria-label="儀表板區段" role="tablist" className="flex shrink-0 gap-1 overflow-x-auto pb-1 sm:gap-2">
           <PanelTab id="overview" active={panel === "overview"} onClick={() => setPanel("overview")}>總覽</PanelTab>
+          <PanelTab id="top20" active={panel === "top20"} onClick={() => setPanel("top20")}>前 20＋台灣</PanelTab>
+          <PanelTab id="trend" active={panel === "trend"} onClick={() => setPanel("trend")}>逐國趨勢</PanelTab>
+          <PanelTab id="globe" active={panel === "globe"} onClick={() => setPanel("globe")}>3D 地球</PanelTab>
           <PanelTab id="countries" active={panel === "countries"} onClick={() => setPanel("countries")}>國家數據</PanelTab>
           <PanelTab id="types" active={panel === "types"} onClick={() => setPanel("types")}>詐騙類型</PanelTab>
           <PanelTab id="method" active={panel === "method"} onClick={() => setPanel("method")}>資料與來源</PanelTab>
         </nav>
 
         <div id="dashboard-panel" role="tabpanel" aria-labelledby={`${panel}-tab`} className="global-fraud-panel mt-3 min-h-0 flex-1 overflow-y-auto rounded-2xl">
+          <div className="mb-2 flex justify-end"><button type="button" onClick={() => { void document.documentElement.requestFullscreen?.(); }} className="inline-flex min-h-9 items-center gap-2 rounded-full border border-navy/20 bg-white px-3 text-sm font-bold text-navy hover:bg-ivory"><Expand size={16} aria-hidden="true" />全螢幕檢視</button></div>
+          {panel === "top20" && <GlobalTopCountries countries={data.countries} onTrend={(iso) => { setPanel("trend"); setTrendCountry(iso); }} />}
+          {panel === "trend" && <CountryTrend countries={data.countries} initialCountry={trendCountry} />}
+          {panel === "globe" && <FraudGlobe countries={data.countries} initialCountry={trendCountry} />}
           {panel === "overview" && <section aria-labelledby="overview-title" className="grid h-full content-start gap-3 sm:gap-4">
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
               <Kpi label="國家／地區" value={`${data.metadata.countriesWithFraudSeries}`} detail="有案件數・2013–24" color="navy" />
@@ -161,7 +176,7 @@ export function GlobalFraudDashboard({ data }: Props) {
               <section aria-labelledby="overview-chart-title" className="min-h-0 rounded-2xl border border-navy/10 bg-white p-3 sm:p-4">
                 <div className="flex flex-wrap items-baseline justify-between gap-2">
                   <h2 id="overview-chart-title" className="text-lg font-extrabold text-navy">{year} 年案件數最多的國家／地區</h2>
-                  <button type="button" onClick={() => { setMetric("fraudCount"); setPanel("countries"); }} className="text-sm font-bold text-gold-dark underline underline-offset-4">查看完整國家圖表</button>
+                  <button type="button" onClick={() => setPanel("top20")} className="text-sm font-bold text-gold-dark underline underline-offset-4">查看前 20＋台灣</button>
                 </div>
                 <div className="h-[min(25vh,240px)] min-h-[170px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
@@ -258,8 +273,8 @@ function Kpi({ label, value, detail, color }: { label: string; value: string; de
   </article>;
 }
 
-function PanelTab({ id, active, onClick, children }: { id: "overview" | "countries" | "types" | "method"; active: boolean; onClick: () => void; children: React.ReactNode }) {
-  return <button id={`${id}-tab`} type="button" role="tab" aria-selected={active} aria-controls="dashboard-panel" onClick={onClick} className={`min-h-10 min-w-0 flex-1 whitespace-nowrap rounded-full px-2 text-xs font-extrabold transition sm:px-4 sm:text-sm ${active ? "bg-navy text-ivory shadow-sm" : "border border-navy/15 bg-white text-navy hover:bg-ivory"}`}>
+function PanelTab({ id, active, onClick, children }: { id: "overview" | "countries" | "top20" | "trend" | "globe" | "types" | "method"; active: boolean; onClick: () => void; children: React.ReactNode }) {
+  return <button id={`${id}-tab`} type="button" role="tab" aria-selected={active} aria-controls="dashboard-panel" onClick={onClick} className={`min-h-10 shrink-0 whitespace-nowrap rounded-full px-3 text-xs font-extrabold transition sm:px-4 sm:text-sm ${active ? "bg-navy text-ivory shadow-sm" : "border border-navy/15 bg-white text-navy hover:bg-ivory"}`}>
     {children}
   </button>;
 }
