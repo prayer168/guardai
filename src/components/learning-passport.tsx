@@ -208,7 +208,7 @@ function AssessmentSection({ title, description, questions, answers, setAnswers,
 
   if (!active) {
     return <section className="passport-assessment-card">
-      <div className="passport-assessment-main"><span className="passport-station-number">{title.startsWith("第一") ? "01" : "03"}</span><div><p className="eyebrow">匿名學習評量 · 每題 1 分</p><h2>{title}</h2><p>{description}</p>{result ? <div className="passport-score"><CheckCircle2 aria-hidden="true" />已送出 · {Math.round(result.score / 20)} / {questions.length} 題答對</div> : <p className="passport-count">共 {questions.length} 題 · 約 3 分鐘</p>}</div></div>
+      <div className="passport-assessment-main"><span className="passport-station-number">{title.startsWith("第一") ? "01" : "03"}</span><div><p className="eyebrow">匿名學習評量 · 每題 1 分</p><h2>{title}</h2><p>{description}</p>{result ? <div className="passport-score"><CheckCircle2 aria-hidden="true" />已送出 · {Math.round(result.score / 20)} / {questions.length} 題答對</div> : <p className="passport-count">共 {questions.length} 題 · 建議 5–7 分鐘</p>}</div></div>
       <div className="passport-assessment-actions">{result ? <button type="button" className="button button-secondary" onClick={() => { setActive(true); setShowAnswers(true); }}><BookOpenCheck size={18} />查看答案與解析</button> : null}<button type="button" className="button button-primary" onClick={() => { if (result) onRestart(); startOver(); }}>{result ? "重新作答" : "開始作答"}<ArrowRight size={18} /></button></div>
     </section>;
   }
@@ -232,7 +232,7 @@ function AssessmentSection({ title, description, questions, answers, setAnswers,
 
   const selected = answers[question.id];
   return <section className="passport-quiz-card" aria-label={title}>
-    <div className="passport-quiz-header"><div><p className="eyebrow">{title}</p><h2>{description}</h2></div><button type="button" className="button button-secondary passport-exit" onClick={() => setActive(false)}><Home size={17} /><span>回學習護照</span></button></div>
+    <div className="passport-quiz-header"><div><p className="eyebrow">{title} · 不填姓名 · 每題只選一個答案</p><h2>{description}</h2></div><button type="button" className="button button-secondary passport-exit" onClick={() => setActive(false)}><Home size={17} /><span>回學習護照</span></button></div>
     <div className="passport-question-progress"><span>第 {questionIndex + 1} / {questions.length} 題</span><span>已作答 {Object.keys(answers).filter((key) => questions.some((item) => item.id === key)).length} 題</span><div><i style={{ width: `${((questionIndex + 1) / questions.length) * 100}%` }} /></div></div>
     <div className="passport-question-body" key={question.id}>
       <p className="passport-question-number">QUESTION {String(questionIndex + 1).padStart(2, "0")}</p>
