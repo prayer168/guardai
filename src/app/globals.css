@@ -1078,24 +1078,16 @@ code {
 .passport-assessment-main,.passport-station-card,.passport-station-locked { flex-direction: row; align-items: flex-start; justify-content: flex-start; }
 .passport-assessment-main { display: flex; gap: 0.65rem; }
 .passport-station-number { display: grid; width: 2.15rem; height: 2.15rem; flex: 0 0 auto; place-items: center; border-radius: 0.7rem; background: #f5eddf; color: #805c25; font-size: 0.83rem; font-weight: 950; }
-.passport-assessment-card h2,.passport-station-card h2,.passport-station-locked h2,.passport-class-card h2 { margin: 0.1rem 0 0.22rem; font-size: clamp(0.9rem, 1.15vw, 1.12rem); font-weight: 900; line-height: 1.25; }
-.passport-assessment-card p,.passport-station-card p,.passport-station-locked p,.passport-class-card p { margin: 0; color: #637388; font-size: clamp(0.7rem, 0.86vw, 0.81rem); line-height: 1.45; }
-.passport-assessment-card .eyebrow,.passport-station-card .eyebrow,.passport-station-locked .eyebrow,.passport-class-card .eyebrow { margin-bottom: 0.2rem; font-size: 0.62rem; }
+.passport-assessment-card h2,.passport-station-card h2,.passport-station-locked h2 { margin: 0.1rem 0 0.22rem; font-size: clamp(0.9rem, 1.15vw, 1.12rem); font-weight: 900; line-height: 1.25; }
+.passport-assessment-card p,.passport-station-card p,.passport-station-locked p { margin: 0; color: #637388; font-size: clamp(0.7rem, 0.86vw, 0.81rem); line-height: 1.45; }
+.passport-assessment-card .eyebrow,.passport-station-card .eyebrow,.passport-station-locked .eyebrow { margin-bottom: 0.2rem; font-size: 0.62rem; }
 .passport-assessment-actions { display: flex; flex-wrap: wrap; gap: 0.4rem; padding-left: 2.8rem; }
-.passport-assessment-actions .button,.passport-station-card .button,.passport-class-card .button { min-height: 2.2rem; padding: 0.45rem 0.7rem; font-size: 0.74rem; }
+.passport-assessment-actions .button,.passport-station-card .button { min-height: 2.2rem; padding: 0.45rem 0.7rem; font-size: 0.74rem; }
 .passport-count,.passport-score { display: flex; align-items: center; gap: 0.35rem; margin-top: 0.45rem !important; color: #2f6845 !important; font-weight: 850; }
 .passport-score svg { width: 1rem; height: 1rem; }
 .passport-station-locked { border-style: dashed; background: #f4f1ea; opacity: 0.88; }
 .passport-station-card.is-ready { border-color: #cbd9cd; background: #f9fcf8; }
 .passport-station-card > div,.passport-station-locked > div { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; gap: 0.35rem; }
-.passport-class-card { display: flex; flex: 0 0 auto; align-items: center; gap: 0.75rem; border-radius: 0.8rem; background: #eaf0f5; padding: 0.6rem 0.85rem; }
-.passport-class-card > svg { flex: 0 0 auto; color: #805c25; }
-.passport-class-card > div { display: grid; flex: 1; grid-template-columns: 1fr auto; align-items: center; gap: 0 0.8rem; }
-.passport-class-card .eyebrow,.passport-class-card h2 { grid-column: 1; }
-.passport-class-card .button { grid-column: 2; grid-row: 1 / span 3; }
-.passport-class-status { min-height: 1rem; grid-column: 1 / -1; }
-.passport-class-hint { display: flex; flex: 0 0 auto; align-items: center; justify-content: center; gap: 0.35rem; margin: 0; color: #68778a; font-size: 0.75rem; }
-.passport-class-hint a { color: #10263d; font-weight: 850; text-decoration: underline; text-underline-offset: 3px; }
 .passport-quiz-card,.passport-review-card { display: flex; width: min(100%, 68rem); min-height: 0; flex: 1 1 auto; flex-direction: column; align-self: center; overflow: hidden; border: 1px solid #e0e3e8; border-radius: 1.05rem; background: #fff; box-shadow: 0 14px 40px rgb(16 38 61 / 0.09); }
 .passport-quiz-card,.passport-review-card { position: fixed; z-index: 70; inset: 0; width: 100vw; height: 100dvh; max-width: none; border: 0; border-radius: 0; box-shadow: none; }
 .passport-quiz-header,.passport-review-heading { display: flex; flex: 0 0 auto; align-items: center; justify-content: space-between; gap: 0.8rem; border-bottom: 1px solid #e6e8eb; padding: 0.7rem clamp(0.85rem, 2vw, 1.5rem); }
@@ -1160,10 +1152,6 @@ code {
   .passport-station-number { width: 1.8rem; height: 1.8rem; border-radius: 0.55rem; font-size: 0.72rem; }
   .passport-assessment-actions { padding-left: 2.45rem; }
   .passport-assessment-actions .button { min-height: 1.9rem; font-size: 0.68rem; }
-  .passport-class-card { gap: 0.45rem; padding: 0.45rem 0.55rem; }
-  .passport-class-card > div { gap: 0.1rem 0.35rem; }
-  .passport-class-card p { font-size: 0.64rem; }
-  .passport-class-hint { flex-wrap: wrap; font-size: 0.67rem; }
   .passport-quiz-header,.passport-review-heading { padding: 0.55rem 0.65rem; }
   .passport-quiz-header h2 { max-width: 14rem; font-size: 0.77rem; line-height: 1.3; }
   .passport-quiz-header .button,.passport-review-heading .button { width: auto; min-height: 2rem; padding: 0.35rem 0.45rem; font-size: 0.66rem; }

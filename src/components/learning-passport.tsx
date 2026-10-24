@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, BarChart3, BookOpenCheck, CheckCircle2, Home, RotateCcw, Send, ShieldCheck, Users } from "lucide-react";
+import { ArrowLeft, ArrowRight, BarChart3, BookOpenCheck, CheckCircle2, Home, RotateCcw, Send, ShieldCheck } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { classroomPackLabels, type ClassroomPack } from "@/lib/classroom";
 import assessmentQuestionData from "@/data/assessment-questions.json";
 
 type Question = {
@@ -35,11 +34,6 @@ export function LearningPassport() {
   const [challengeComplete, setChallengeComplete] = useState(false);
   const [challengeScore, setChallengeScore] = useState<number | null>(null);
   const [analysisCount, setAnalysisCount] = useState(0);
-  const [classCode, setClassCode] = useState("");
-  const [classPack, setClassPack] = useState<ClassroomPack | null>(null);
-  const [classStatus, setClassStatus] = useState("");
-  const [classSubmitted, setClassSubmitted] = useState(false);
-  const [classBusy, setClassBusy] = useState(false);
   const [anonymousShare, setAnonymousShare] = useState(false);
   const [anonymousBusy, setAnonymousBusy] = useState(false);
   const [anonymousStatus, setAnonymousStatus] = useState("");
@@ -67,18 +61,6 @@ export function LearningPassport() {
         }
       }
       setAnalysisCount(Number(window.localStorage.getItem("guardai-analysis-count") ?? "0"));
-      const activeClassCode = window.localStorage.getItem("guardai-class-code") ?? "";
-      setClassCode(activeClassCode);
-      setClassSubmitted(Boolean(activeClassCode && window.localStorage.getItem(`guardai-class-submitted:${activeClassCode}`)));
-      if (activeClassCode) {
-        void fetch(`/api/classes/${encodeURIComponent(activeClassCode)}`, { cache: "no-store" })
-          .then(async (response) => {
-            if (!response.ok) throw new Error();
-            return response.json() as Promise<{ classroom: { pack: ClassroomPack } }>;
-          })
-          .then((body) => setClassPack(body.classroom.pack))
-          .catch(() => setClassStatus("班級代碼可能已過期，請向教師確認。"));
-      }
     });
 
     return () => window.cancelAnimationFrame(frame);
@@ -182,18 +164,6 @@ export function LearningPassport() {
     setAnonymousStatus("已清除這台裝置的進度與匿名統計。");
     setPreAnswers({});
     setPostAnswers({});
-    if (classCode) {
-      window.localStorage.removeItem(`guardai-class-submitted:${classCode}`);
-      setClassSubmitted(false);
-    }
-  }
-
-  function learnerId() {
-    const stored = window.localStorage.getItem("guardai-learner-id");
-    if (stored) return stored;
-    const created = window.crypto.randomUUID();
-    window.localStorage.setItem("guardai-learner-id", created);
-    return created;
   }
 
   function anonymousLearnerId() {
@@ -205,27 +175,6 @@ export function LearningPassport() {
     return created;
   }
 
-  async function submitAnonymousClassResult() {
-    if (!classCode || !preResult || !postResult || challengeScore === null) return;
-    setClassBusy(true);
-    setClassStatus("");
-    try {
-      const response = await fetch(`/api/classes/${encodeURIComponent(classCode)}/results`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ learnerId: learnerId(), preScore: preResult.score, postScore: postResult.score, challengeScore, analysisCount, missedConcepts }),
-      });
-      const body = (await response.json().catch(() => null)) as { error?: unknown } | null;
-      if (!response.ok) throw new Error(typeof body?.error === "string" ? body.error : "匿名成果暫時無法提交。");
-      window.localStorage.setItem(`guardai-class-submitted:${classCode}`, new Date().toISOString());
-      setClassSubmitted(true);
-      setClassStatus("匿名成果已提交；教師只會看到全班彙總。");
-    } catch (reason) {
-      setClassStatus(reason instanceof Error ? reason.message : "匿名成果暫時無法提交。");
-    } finally {
-      setClassBusy(false);
-    }
-  }
 
   const improvement = preResult && postResult ? Math.round((postResult.score - preResult.score) / 20) : null;
   const missedConcepts = postResult
@@ -274,7 +223,6 @@ export function LearningPassport() {
           {preResult && challengeComplete ? <AssessmentSection title="第三站｜五題後測" description="用新情境再次作答，看看你的查證策略是否能靈活運用。" questions={postQuestions} answers={postAnswers} setAnswers={setPostAnswers} result={postResult} onSubmit={() => submitAssessment("post")} onRestart={() => { window.localStorage.removeItem("guardai-posttest-v2"); setPostResult(null); setPostAnswers({}); }} /> : <section className="passport-station-locked"><span className="passport-station-number">03</span><div><p className="eyebrow">第三站｜五題後測</p><h2>完成情境練習後解鎖</h2><p>後測題目與前測測量相同的查證能力，題目情境不同。</p></div></section>}
         </div>
 
-        {classCode ? <section className="passport-class-card"><Users aria-hidden="true" /><div><p className="eyebrow">匿名班級 {classCode}</p><h2>提交學習成果</h2><p>{classPack ? `教師指派：${classroomPackLabels[classPack]}。` : ""}完成前測、六題闖關與後測後，可提交匿名分數彙總。系統不傳送姓名或個別答案。</p>{preResult && postResult && challengeScore !== null ? <button type="button" className="button button-primary" disabled={classBusy} onClick={submitAnonymousClassResult}><Send aria-hidden="true" size={18} />{classBusy ? "提交中…" : classSubmitted ? "更新匿名成果" : "提交匿名成果"}</button> : null}<p className="passport-class-status" aria-live="polite">{classStatus}</p></div></section> : <p className="passport-class-hint"><Users aria-hidden="true" size={17} />有教師提供班級代碼嗎？<Link href="/join">加入匿名班級</Link>後，可提交匿名分數彙總。</p>}
       </main>
     </div>
   );
