@@ -40,6 +40,9 @@ export function LearningPassport() {
   const [classStatus, setClassStatus] = useState("");
   const [classSubmitted, setClassSubmitted] = useState(false);
   const [classBusy, setClassBusy] = useState(false);
+  const [anonymousShare, setAnonymousShare] = useState(false);
+  const [anonymousBusy, setAnonymousBusy] = useState(false);
+  const [anonymousStatus, setAnonymousStatus] = useState("");
 
   useEffect(() => {
     const frame = window.requestAnimationFrame(() => {
@@ -48,6 +51,7 @@ export function LearningPassport() {
         const savedPost = window.localStorage.getItem("guardai-posttest-v2");
         setPreResult(savedPre ? (JSON.parse(savedPre) as StoredAssessment) : null);
         setPostResult(savedPost ? (JSON.parse(savedPost) as StoredAssessment) : null);
+        setAnonymousShare(window.localStorage.getItem("guardai-public-assessment-consent-v1") === "true");
       } catch {
         window.localStorage.removeItem("guardai-pretest-v2");
         window.localStorage.removeItem("guardai-posttest-v2");
@@ -87,16 +91,95 @@ export function LearningPassport() {
     window.localStorage.setItem(kind === "pre" ? "guardai-pretest-v2" : "guardai-posttest-v2", JSON.stringify(result));
     if (kind === "pre") setPreResult(result);
     else setPostResult(result);
+    if (anonymousShare) {
+      setAnonymousBusy(true);
+      void saveAnonymousStage(kind, answers).finally(() => setAnonymousBusy(false));
+    }
   }
 
-  function clearProgress() {
+  async function saveAnonymousStage(kind: "pre" | "post", answers: Record<string, number>) {
+    setAnonymousStatus("");
+    try {
+      const questions = kind === "pre" ? preQuestions : postQuestions;
+      const score = calculateScore(questions, answers);
+      const missedConcepts = questions.filter((question) => answers[question.id] !== question.answer).map((question) => question.concept);
+      const response = await fetch("/api/assessment-results", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ learnerId: anonymousLearnerId(), kind, score, missedConcepts, consent: true }),
+      });
+      const body = (await response.json().catch(() => null)) as { error?: unknown } | null;
+      if (!response.ok) throw new Error(typeof body?.error === "string" ? body.error : "匿名結果暫時無法儲存。");
+      setAnonymousStatus(`${kind === "pre" ? "前測" : "後測"}已匿名加入整體統計；資料最多保存 30 天。`);
+    } catch (reason) {
+      setAnonymousStatus(reason instanceof Error ? `${reason.message}；你的測驗成績仍保存在此裝置。` : "匿名結果暫時無法儲存；你的測驗成績仍保存在此裝置。");
+    }
+  }
+
+  async function updateAnonymousConsent(nextConsent: boolean) {
+    if (anonymousBusy || nextConsent === anonymousShare) return;
+    setAnonymousBusy(true);
+    setAnonymousStatus("");
+    try {
+      if (!nextConsent) {
+        const storedLearnerId = window.localStorage.getItem("guardai-public-assessment-learner-id");
+        if (storedLearnerId) {
+          const response = await fetch("/api/assessment-results", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ learnerId: storedLearnerId }),
+          });
+          const body = (await response.json().catch(() => null)) as { error?: unknown } | null;
+          if (!response.ok) throw new Error(typeof body?.error === "string" ? body.error : "匿名資料暫時無法撤回。");
+        }
+        window.localStorage.removeItem("guardai-public-assessment-consent-v1");
+        window.localStorage.removeItem("guardai-public-assessment-learner-id");
+        setAnonymousShare(false);
+        setAnonymousStatus("已撤回同意並刪除這台裝置提交的匿名統計資料。");
+        return;
+      }
+
+      window.localStorage.setItem("guardai-public-assessment-consent-v1", "true");
+      setAnonymousShare(true);
+      if (preResult) await saveAnonymousStage("pre", preResult.answers);
+      if (postResult) await saveAnonymousStage("post", postResult.answers);
+      if (!preResult && !postResult) setAnonymousStatus("已同意；完成前測或後測時會自願加入匿名統計。");
+    } catch (reason) {
+      setAnonymousStatus(reason instanceof Error ? reason.message : "匿名統計設定暫時無法更新。");
+    } finally {
+      setAnonymousBusy(false);
+    }
+  }
+
+  async function clearProgress() {
     if (!window.confirm("確定清除這台裝置上的匿名學習紀錄？")) return;
-    ["guardai-pretest", "guardai-posttest", "guardai-pretest-v2", "guardai-posttest-v2", "guardai-challenge", "guardai-analysis-count"].forEach((key) => window.localStorage.removeItem(key));
+    if (anonymousShare) {
+      const storedLearnerId = window.localStorage.getItem("guardai-public-assessment-learner-id");
+      if (storedLearnerId) {
+        setAnonymousBusy(true);
+        try {
+          const response = await fetch("/api/assessment-results", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ learnerId: storedLearnerId }),
+          });
+          if (!response.ok) throw new Error("暫時無法刪除伺服器上的匿名統計，請稍後重試。");
+        } catch (reason) {
+          setAnonymousStatus(reason instanceof Error ? reason.message : "暫時無法刪除伺服器上的匿名統計，請稍後重試。");
+          setAnonymousBusy(false);
+          return;
+        }
+        setAnonymousBusy(false);
+      }
+    }
+    ["guardai-pretest", "guardai-posttest", "guardai-pretest-v2", "guardai-posttest-v2", "guardai-challenge", "guardai-analysis-count", "guardai-public-assessment-consent-v1", "guardai-public-assessment-learner-id", "guardai-learner-id"].forEach((key) => window.localStorage.removeItem(key));
     setPreResult(null);
     setPostResult(null);
     setChallengeComplete(false);
     setChallengeScore(null);
     setAnalysisCount(0);
+    setAnonymousShare(false);
+    setAnonymousStatus("已清除這台裝置的進度與匿名統計。");
     setPreAnswers({});
     setPostAnswers({});
     if (classCode) {
@@ -110,6 +193,15 @@ export function LearningPassport() {
     if (stored) return stored;
     const created = window.crypto.randomUUID();
     window.localStorage.setItem("guardai-learner-id", created);
+    return created;
+  }
+
+  function anonymousLearnerId() {
+    const key = "guardai-public-assessment-learner-id";
+    const stored = window.localStorage.getItem(key);
+    if (stored) return stored;
+    const created = window.crypto.randomUUID();
+    window.localStorage.setItem(key, created);
     return created;
   }
 
@@ -145,7 +237,7 @@ export function LearningPassport() {
       <div className="passport-topbar">
         <Link className="passport-home" href="/" aria-label="回到 GuardAI 首頁"><Home size={19} /><span>回到主畫面</span></Link>
         <span className="passport-topbar-title">匿名學習護照</span>
-        <button type="button" className="text-button" onClick={clearProgress}><RotateCcw aria-hidden="true" size={17} /><span className="passport-clear-label">清除紀錄</span></button>
+        <div className="passport-topbar-actions"><Link className="passport-results-link" href="/results"><BarChart3 aria-hidden="true" size={17} /><span>整體統計</span></Link><button type="button" className="text-button" disabled={anonymousBusy} onClick={() => void clearProgress()}><RotateCcw aria-hidden="true" size={17} /><span className="passport-clear-label">清除紀錄</span></button></div>
       </div>
 
       <main className="passport-content" aria-label="匿名學習護照">
@@ -157,6 +249,12 @@ export function LearningPassport() {
             <article className="metric-card"><BarChart3 aria-hidden="true" /><strong>{analysisCount} 次</strong><span>AI 判讀練習</span></article>
           </div>
         </header>
+
+        <section className="passport-consent" aria-label="匿名評量統計同意設定">
+          <label><input type="checkbox" checked={anonymousShare} disabled={anonymousBusy} onChange={(event) => void updateAnonymousConsent(event.target.checked)} /><span>自願納入匿名統計</span></label>
+          <p>只分享分數與錯誤概念，不收姓名、班級、座號或個別答案；30 天自動刪除。</p>
+          <span className="passport-consent-status" role="status" aria-live="polite">{anonymousBusy ? "更新中…" : anonymousStatus}</span>
+        </section>
 
         {preResult && postResult ? (
           <section className="passport-results-banner">

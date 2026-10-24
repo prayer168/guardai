@@ -44,6 +44,8 @@ GuardAI 是為 2026 TAIA AI 創意設計大賽教育科技領域製作的響應�
 - 每日配額只保存日期、不可逆訪客雜湊與計數，到期自動刪除，不保存訊息內容
 - 個人學習紀錄預設只匿名保存在目前瀏覽器；加入班級後可主動提交分數與概念彙總
 - 匿名班級只保存班級設定、不可逆裝置雜湊及固定成果欄位，30 天後自動刪除
+- 前後測可不登入、不填班級或座號；自願加入全站統計後，只保存匿名雜湊、分數與錯誤概念，30 天後自動刪除
+- 整體儀表板僅顯示群體彙總，樣本未滿 5 人時隱藏平均與人數
 - 不自動開啟或造訪使用者訊息中的網址
 
 ## 本機啟動
@@ -68,8 +70,8 @@ npm run dev
 - `OPENAI_MODEL`：預設為 `gpt-5.6-luna`，可換成帳戶可用且支援 Structured Outputs 的模型
 - `GUARDAI_AI_TIMEOUT_MS`：單次 AI 呼叫逾時，預設 20,000 毫秒
 - `GUARDAI_DAILY_LIMIT`／`GUARDAI_VISITOR_DAILY_LIMIT`：臺北時間每日全站與訪客配額
-- `GUARDAI_LIMIT_SALT`：產生不可逆訪客識別雜湊的伺服器祕密
-- `KV_REST_API_URL`／`KV_REST_API_TOKEN`：Upstash Redis，用於每日配額與 30 天匿名班級彙總
+- `GUARDAI_LIMIT_SALT`：產生不可逆訪客／匿名學習者識別雜湊的伺服器祕密
+- `KV_REST_API_URL`／`KV_REST_API_TOKEN`：Upstash Redis，用於每日配額、匿名班級與自願前後測彙總
 
 ## 品質檢查
 
@@ -92,7 +94,7 @@ npm run build
 2. 在 Vercel 匯入儲存庫，Framework Preset 選 Next.js。
 3. 若使用現場 AI，於 Project Settings → Environment Variables 設定 `GUARDAI_AI_MODE=live`、`OPENAI_API_KEY` 與 `OPENAI_MODEL`。
 4. 若只需穩定參賽展示，不設定任何環境變數即可直接部署 Mock Demo。
-5. 部署後依序測試 `/showcase`、`/guardai-offline-demo.html`、`/analyze`、`/challenge`、`/join`、`/passport`、`/teacher`、`/knowledge`、`/privacy` 與相關 API。
+5. 部署後依序測試 `/showcase`、`/guardai-offline-demo.html`、`/analyze`、`/challenge`、`/join`、`/passport`、`/results`、`/teacher`、`/knowledge`、`/privacy` 與相關 API。
 
 ## 圖像來源
 

@@ -23,7 +23,7 @@ export function PrivacyExperience() {
             <div className="privacy-principle-grid">
               {[
                 [EyeOff, "輸入前先少一點", "不要貼入姓名、身分證、帳號、密碼、信用卡或 OTP。系統會再次遮罩常見敏感格式。"],
-                [Database, "不保存原始訊息", "不要求登入，也不把使用者貼入的訊息寫入資料庫。個人學習紀錄預設只存在本機 localStorage。"],
+                [Database, "評量統計由你決定", "貼入判讀的訊息不會保存。前後測分數與錯誤概念只有在你自願同意後才會匿名彙總；不收姓名、班級、座號或逐題作答，30 天自動刪除。"],
                 [LockKeyhole, "金鑰留在伺服器", "啟用即時 AI 時，API Key 只存在伺服器環境變數，不會傳到瀏覽器。"],
                 [Bot, "AI 不是最終裁判", "AI 可能誤判、漏判或欠缺最新資訊；結果只用來協助辨認風險與規劃查證。"],
               ].map(([Icon, title, description]) => {
@@ -100,10 +100,10 @@ export function PrivacyExperience() {
         {page === 4 ? (
           <section className="privacy-slide-grid privacy-class-slide" aria-labelledby="privacy-class-title">
             <div className="privacy-class-card">
-              <p className="privacy-mini-kicker">匿名班級資料</p>
-              <h1 id="privacy-class-title" className="privacy-slide-title">加入班級時會送出哪些內容？</h1>
-              <p>學生必須主動按下提交，才會送出前測分數、後測分數、闖關分數、判讀練習次數與常忽略概念。伺服器只保存班級代碼、情境包、不可逆裝置雜湊和這些成果欄位；不保存姓名、座號、Email、個別作答內容或貼入的可疑訊息。</p>
-              <strong>匿名班級與成果會在建立後 30 天自動刪除。教師只能查看全班參與人數、完成率與平均趨勢。</strong>
+              <p className="privacy-mini-kicker">匿名評量資料</p>
+              <h1 id="privacy-class-title" className="privacy-slide-title">所有人都能參與，不必提供班級或座號</h1>
+              <p>學生、家長、教師或一般大眾都可不登入完成前後測。只有勾選自願加入後，網站才送出分數與錯誤概念；伺服器以不可逆雜湊識別碼配對同一瀏覽器裝置的前後測，不保存姓名、班級、座號或逐題作答。</p>
+              <strong>匿名評量統計最多保留 30 天，儀表板只顯示至少 5 個匿名識別碼的群體結果；可隨時取消同意並刪除本裝置提交的資料。不同裝置可能重複計入。需要班級分析時，也可另用匿名班級代碼查看彙總。</strong>
             </div>
           </section>
         ) : null}
