@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { PageIntro } from "@/components/page-intro";
 import { ShowcaseExperience } from "@/components/showcase-experience";
 
 export const metadata: Metadata = {
@@ -10,9 +9,8 @@ export const metadata: Metadata = {
 
 export default function ShowcasePage() {
   return (
-    <>
-      <PageIntro eyebrow="2026 TAIA 入圍作品" title="GuardAI 競賽展示" description="從一則可疑訊息出發，看見風險證據、查證問題、安全行動、求助、學習成果與可被檢查的 AI 安全架構。" />
-      <div className="site-container py-10 md:py-14"><ShowcaseExperience /></div>
-    </>
+    <div className="site-page showcase-page">
+      <div className="site-container py-2"><ShowcaseExperience /></div>
+    </div>
   );
 }

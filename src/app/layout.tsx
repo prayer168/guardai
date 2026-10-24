@@ -30,9 +30,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="zh-Hant" className={`${notoSansTc.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col">
+      <body className="app-shell flex h-dvh flex-col overflow-hidden">
         <SiteHeader />
-        <main id="main-content" className="flex-1">{children}</main>
+        <main id="main-content" className="app-main min-h-0 flex-1">{children}</main>
         <SiteFooter />
       </body>
     </html>

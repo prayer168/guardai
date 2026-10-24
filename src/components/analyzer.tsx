@@ -109,7 +109,7 @@ export function Analyzer() {
             </div>
           </div>
 
-          <form className="p-5 md:p-8" onSubmit={analyze}>
+          <form className="p-3 md:p-4" onSubmit={analyze}>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <label htmlFor="message" className="text-xl font-black text-navy">貼上收到的訊息</label>
               <span className="text-sm font-semibold text-ink-muted">{message.length} / 5,000</span>
@@ -118,7 +118,7 @@ export function Analyzer() {
               id="message"
               value={message}
               maxLength={5000}
-              rows={8}
+              rows={3}
               onChange={(event) => setMessage(event.target.value)}
               placeholder="例如：您的帳戶即將停權，請立即點擊連結重新驗證……"
               className="input-area mt-4"

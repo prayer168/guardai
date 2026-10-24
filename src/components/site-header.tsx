@@ -28,10 +28,10 @@ export function SiteHeader() {
       >
         跳到主要內容
       </a>
-      <div className="site-container flex min-h-18 items-center justify-between gap-4 py-3">
+      <div className="site-container flex min-h-14 items-center justify-between gap-4 py-1.5">
         <Link href="/" className="group flex items-center gap-3" onClick={() => setOpen(false)}>
-          <span className="grid size-11 place-items-center rounded-full border border-gold/50 bg-gold/10 text-gold transition group-hover:bg-gold/20">
-            <ShieldCheck aria-hidden="true" size={24} strokeWidth={1.8} />
+          <span className="grid size-9 place-items-center rounded-full border border-gold/50 bg-gold/10 text-gold transition group-hover:bg-gold/20">
+            <ShieldCheck aria-hidden="true" size={21} strokeWidth={1.8} />
           </span>
           <span>
             <span className="block text-lg font-extrabold tracking-wide">GuardAI</span>

@@ -315,23 +315,23 @@ export function ShowcaseExperience() {
   }
 
   return (
-    <div className="space-y-8">
-      <section className="overflow-hidden rounded-3xl bg-navy text-ivory shadow-xl">
-        <div className="grid gap-6 p-6 md:p-9 lg:grid-cols-[1fr_auto] lg:items-center">
+    <div className="showcase-experience">
+      <section className="showcase-overview overflow-hidden rounded-3xl bg-navy text-ivory shadow-xl">
+        <div className="grid gap-3 p-4 md:grid-cols-[1fr_auto] md:items-center">
           <div>
             <span className="inline-flex items-center gap-2 rounded-full border border-gold/40 bg-gold/10 px-3 py-2 text-sm font-black text-gold"><ShieldCheck aria-hidden="true" size={18} />目前模式：安全 Demo 引擎</span>
-            <h2 className="mt-5 text-3xl font-black md:text-5xl">3–5 分鐘競賽展示</h2>
-            <p className="mt-3 max-w-3xl text-lg leading-8 text-ivory/75">以內嵌案例呈現完整教學與 AI 安全設計。頁面載入後即使斷網，也能繼續完成核心流程。</p>
+            <h2 className="mt-2 text-2xl font-black">3–5 分鐘競賽展示</h2>
+            <p className="mt-1 max-w-3xl text-sm leading-6 text-ivory/75">從風險線索到安全行動，使用內嵌案例展示教學流程與 AI 安全設計。</p>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
             <button type="button" className="button button-light" onClick={resetDemo}><RefreshCw aria-hidden="true" size={18} />重新開始展示</button>
             <a href="/guardai-offline-demo.html" download className="button button-ghost-light"><Download aria-hidden="true" size={18} />下載單檔離線備援</a>
           </div>
         </div>
-        <div className="border-t border-white/10 px-6 py-4 text-sm font-bold text-ivory/65 md:px-9">建議展示時間：約 {Math.round(totalSeconds / 60)} 分鐘｜不會呼叫 API｜不會保存任何輸入</div>
+        <div className="border-t border-white/10 px-4 py-2 text-xs font-bold text-ivory/65">建議展示時間：約 {Math.round(totalSeconds / 60)} 分鐘｜不會呼叫 API｜不會保存任何輸入</div>
       </section>
 
-      <nav className="overflow-x-auto rounded-2xl border border-navy/10 bg-white p-3" aria-label="競賽展示步驟">
+      <nav className="showcase-step-nav overflow-x-auto rounded-2xl border border-navy/10 bg-white p-2" aria-label="競賽展示步驟">
         <ol className="flex min-w-max gap-2">
           {showcaseSteps.map((step, index) => (
             <li key={step.id}>
@@ -343,18 +343,18 @@ export function ShowcaseExperience() {
         </ol>
       </nav>
 
-      <section className="section-card min-h-[34rem]" aria-labelledby="showcase-stage-title">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-navy/10 pb-5">
+      <section className="section-card showcase-stage-card" aria-labelledby="showcase-stage-title">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-navy/10 pb-3">
           <div>
             <p className="text-sm font-black text-gold-dark">第 {stepIndex + 1}／{showcaseSteps.length} 步 · 約 {current.seconds} 秒</p>
-            <h2 id="showcase-stage-title" className="mt-1 text-xl font-black text-navy">{current.title}</h2>
+            <h2 id="showcase-stage-title" className="mt-1 text-lg font-black text-navy">{current.title}</h2>
           </div>
           <span className="metric-pill">{Math.round(((stepIndex + 1) / showcaseSteps.length) * 100)}% 完成</span>
         </div>
-        <div ref={stageRef} tabIndex={-1} className="mt-7 focus:outline-none">
+        <div ref={stageRef} tabIndex={-1} className="mt-3 focus:outline-none">
           <ShowcaseStage id={current.id} onLoadDemo={() => goToStep(1)} />
         </div>
-        <div className="mt-8 flex flex-col-reverse gap-3 border-t border-navy/10 pt-5 sm:flex-row sm:justify-between">
+        <div className="mt-4 flex flex-col-reverse gap-2 border-t border-navy/10 pt-3 sm:flex-row sm:justify-between">
           <button type="button" className="button button-outline" disabled={stepIndex === 0} onClick={() => goToStep(stepIndex - 1)}><ArrowLeft aria-hidden="true" />上一步</button>
           {stepIndex < showcaseSteps.length - 1 ? (
             <button type="button" className="button button-primary" onClick={() => goToStep(stepIndex + 1)}>下一步：{showcaseSteps[stepIndex + 1].short}<ArrowRight aria-hidden="true" /></button>

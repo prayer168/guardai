@@ -7,9 +7,9 @@ export const metadata: Metadata = { title: "隱私與 AI 說明" };
 
 export default function PrivacyPage() {
   return (
-    <>
+    <div className="site-page">
       <PageIntro eyebrow="安全不是附加功能" title="隱私與 AI 使用說明" description="GuardAI 以最少資料、可解釋結果與真人求助為原則，清楚說明 AI 能做什麼、不能做什麼。" />
-      <div className="site-container max-w-5xl space-y-7 py-10 md:py-14">
+      <div className="site-container max-w-5xl space-y-5 py-4 md:py-6">
         <section className="grid gap-5 md:grid-cols-2">
           {[
             [EyeOff, "輸入前先少一點", "不要貼入姓名、身分證、帳號、密碼、信用卡或 OTP。系統會再次遮罩常見敏感格式。"],
@@ -94,6 +94,6 @@ export default function PrivacyPage() {
 
         <section className="notice notice-warning"><ShieldCheck aria-hidden="true" /><div><strong>固定聲明</strong><p>此為 AI 初步風險分析，不代表警方、金融機構或法律上的最終認定。</p></div></section>
       </div>
-    </>
+    </div>
   );
 }

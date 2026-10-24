@@ -77,8 +77,8 @@ export function ChallengeGame() {
   const isCorrect = selected === scenario.correctOption;
 
   return (
-    <section className="section-card p-0">
-      <div className="border-b border-navy/10 bg-ivory-deep/45 px-5 py-4 md:px-8">
+    <section className="section-card challenge-card p-0">
+      <div className="challenge-card-header border-b border-navy/10 bg-ivory-deep/45 px-5 py-4 md:px-8">
         <div className="flex items-center justify-between gap-3 text-sm font-bold text-ink-muted">
           <span>情境 {index + 1}／{challengeScenarios.length}</span>
           <span>已答對 {correctCount} 題</span>
@@ -88,12 +88,12 @@ export function ChallengeGame() {
         </div>
       </div>
 
-      <div className="p-5 md:p-8">
+      <div className="challenge-card-body p-5 md:p-8">
         <div className="flex flex-wrap items-center gap-3">
           <span className="rounded-full bg-navy px-3 py-1 text-sm font-black text-gold">練習「{scenario.skill}」</span>
           {scenario.isBenign ? <span className="rounded-full bg-sage/15 px-3 py-1 text-sm font-bold text-sage-dark">正常訊息案例</span> : null}
         </div>
-        <h2 className="mt-4 text-3xl font-black text-navy">{scenario.title}</h2>
+        <h2 className="challenge-card-title mt-4 text-3xl font-black text-navy">{scenario.title}</h2>
         <p className="mt-2 text-ink-muted">{scenario.context}</p>
         <blockquote className="message-bubble mt-6">{scenario.message}</blockquote>
 

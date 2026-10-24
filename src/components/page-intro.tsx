@@ -8,11 +8,11 @@ type PageIntroProps = {
 export function PageIntro({ eyebrow, title, description, children }: PageIntroProps) {
   return (
     <section className="border-b border-navy/10 bg-ivory-deep/55">
-      <div className="site-container grid gap-6 py-10 md:grid-cols-[1fr_auto] md:items-end md:py-14">
+      <div className="site-container grid gap-1.5 py-2 md:grid-cols-[1fr_auto] md:items-end md:py-3">
         <div>
           <p className="eyebrow">{eyebrow}</p>
-          <h1 className="mt-3 max-w-4xl text-3xl font-black tracking-tight text-navy md:text-5xl">{title}</h1>
-          <p className="mt-4 max-w-3xl text-lg leading-8 text-ink-muted">{description}</p>
+          <h1 className="mt-1 max-w-4xl text-2xl font-black tracking-tight text-navy sm:text-3xl md:text-2xl">{title}</h1>
+          <p className="mt-1 max-w-3xl text-xs leading-5 text-ink-muted md:text-xs md:leading-5">{description}</p>
         </div>
         {children ? <div>{children}</div> : null}
       </div>
