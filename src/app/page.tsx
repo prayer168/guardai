@@ -13,9 +13,9 @@ export default function HomePage() {
         <h1 className="mt-3 text-4xl font-black leading-[1.08] tracking-tight text-navy sm:text-5xl lg:text-6xl">GuardAI <span className="text-coral">反詐守門員</span></h1>
         <p className="mt-3 text-xl font-black text-navy sm:text-2xl">不替你判斷，陪你完成查證。</p>
         <p className="mt-3 max-w-xl leading-7 text-ink-muted">把可疑訊息變成一次學習：找證據、問對問題、獨立查證，必要時向可信任的人求助。</p>
-        <a href="tel:165" className="home-hotline" aria-label="撥打 165 反詐騙諮詢專線">
+        <a href="tel:165" title="點擊後由手機或預設電話程式開啟撥號" className="home-hotline" aria-label="以目前裝置撥打 165 反詐騙諮詢專線">
           <span className="home-hotline-icon"><Phone aria-hidden="true" size={25} /></span>
-          <span className="home-hotline-copy"><span className="home-hotline-label">遇到疑似詐騙？立即求助</span><strong>165</strong><span className="home-hotline-detail">反詐騙諮詢專線｜點擊撥打</span></span>
+          <span className="home-hotline-copy"><span className="home-hotline-label">遇到疑似詐騙？立即求助</span><strong>165</strong><span className="home-hotline-detail">反詐騙諮詢專線｜開啟裝置撥號</span></span>
           <ArrowRight aria-hidden="true" className="home-hotline-arrow" size={24} />
         </a>
         <div className="mt-5 flex flex-wrap gap-3">
