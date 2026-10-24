@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, HandHeart, MessageCircleQuestion, MousePointerClick, PlayCircle, SearchCheck } from "lucide-react";
+import { ArrowRight, BadgeCheck, HandHeart, MessageCircleQuestion, MousePointerClick, Phone, PlayCircle, SearchCheck } from "lucide-react";
 
 import { verificationSteps } from "@/lib/content";
 
@@ -13,6 +13,11 @@ export default function HomePage() {
         <h1 className="mt-3 text-4xl font-black leading-[1.08] tracking-tight text-navy sm:text-5xl lg:text-6xl">GuardAI <span className="text-coral">反詐守門員</span></h1>
         <p className="mt-3 text-xl font-black text-navy sm:text-2xl">不替你判斷，陪你完成查證。</p>
         <p className="mt-3 max-w-xl leading-7 text-ink-muted">把可疑訊息變成一次學習：找證據、問對問題、獨立查證，必要時向可信任的人求助。</p>
+        <a href="tel:165" className="home-hotline" aria-label="撥打 165 反詐騙諮詢專線">
+          <span className="home-hotline-icon"><Phone aria-hidden="true" size={25} /></span>
+          <span className="home-hotline-copy"><span className="home-hotline-label">遇到疑似詐騙？立即求助</span><strong>165</strong><span className="home-hotline-detail">反詐騙諮詢專線｜點擊撥打</span></span>
+          <ArrowRight aria-hidden="true" className="home-hotline-arrow" size={24} />
+        </a>
         <div className="mt-5 flex flex-wrap gap-3">
           <Link href="/analyze" className="button button-primary">開始查證練習 <ArrowRight aria-hidden="true" size={18} /></Link>
           <Link href="/challenge" className="button button-outline">情境闖關</Link>

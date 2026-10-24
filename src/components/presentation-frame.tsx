@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, Expand, Home, Shrink } from "lucide-react";
+import { ArrowLeft, ArrowRight, Expand, Home, Phone, Shrink } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
@@ -53,7 +53,7 @@ export function PresentationFrame({ title, subtitle, pageNumber, pageCount, page
 
     setImmersive(true);
     try {
-      await stageRef.current?.requestFullscreen?.();
+      await document.documentElement.requestFullscreen?.();
     } catch {
       // Fixed-position presentation remains available when native fullscreen is unsupported.
     }
@@ -121,6 +121,7 @@ export function PresentationFrame({ title, subtitle, pageNumber, pageCount, page
       <footer className="knowledge-navigation">
         <button type="button" className="knowledge-nav-button" onClick={onPrevious} disabled={previousDisabled} aria-label="上一頁"><ArrowLeft aria-hidden="true" /><span>上一頁</span></button>
         <p aria-live="polite">{pageLabel}</p>
+        <a href="tel:165" className="knowledge-hotline-button" aria-label="撥打 165 反詐騙諮詢專線"><Phone aria-hidden="true" size={17} /><span>165 求助</span></a>
         <button type="button" className="knowledge-nav-button knowledge-nav-next" onClick={onNext} disabled={nextDisabled} aria-label={nextLabel}><span>{nextLabel}</span><ArrowRight aria-hidden="true" /></button>
       </footer>
     </div>
