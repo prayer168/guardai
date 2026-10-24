@@ -15,11 +15,12 @@ const responseHeaders = {
 };
 
 function logStoreFailure(action: string, reason: unknown) {
-  const failure = typeof reason === "object" && reason !== null ? reason as { name?: unknown; status?: unknown } : {};
+  const failure = typeof reason === "object" && reason !== null ? reason as { name?: unknown; status?: unknown; stack?: unknown } : {};
   console.error("GUARDAI_ASSESSMENT_STORE_FAILURE", {
     action,
     name: typeof failure.name === "string" ? failure.name : "unknown",
     status: typeof failure.status === "number" ? failure.status : undefined,
+    stack: typeof failure.stack === "string" ? failure.stack.split("\n").slice(0, 5).join("\n") : undefined,
   });
 }
 
